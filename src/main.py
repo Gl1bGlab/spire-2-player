@@ -5,7 +5,7 @@ from win32 import win32api, win32gui
 
 from constants.project_constants import GameState
 from startup import get_game_window
-from gen_helpers import check_and_grab_game_image
+from src.window_stuff import check_and_grab_game_image
 
 def main():
     curr_state = GameState.UNOPENED
