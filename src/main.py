@@ -4,16 +4,13 @@ from PIL import Image, ImageGrab
 from win32 import win32api, win32gui
 
 from constants.project_constants import GameState
-from startup import get_game_window
-from src.window_stuff import check_and_grab_game_image
+from game_window_handler import GameWindowHandler
 
 def main():
+    window_manager = GameWindowHandler()
     curr_state = GameState.UNOPENED
-    game_window = get_game_window()
-    print(hex(win32gui.GetForegroundWindow()))
 
-    image = check_and_grab_game_image(game_window)
-    image.show()
+    window_manager.curr_image.show()
 
     curr_state = GameState.INIT
     # defect_portrait = Image.open("constants\\img_constants\\defect_portrait.jpg")
