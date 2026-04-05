@@ -3,6 +3,7 @@ from PIL import Image, ImageGrab
 
 from startup import get_game_window
 from constants.game_constants import WINDOW_NAME
+from constants.project_constants import WH_SCREEN_RATIO
 
 def game_window_still_exists_check(game_window):
     if win32gui.GetWindowText(game_window) == WINDOW_NAME:
@@ -18,6 +19,12 @@ def game_window_foreground_check(game_window) -> None:
         pass
 def game_screen_grab(game_window) -> Image:
     window_dimentions = win32gui.GetWindowRect(game_window)
+    left, top, right, bottom = window_dimentions
+    height =  bottom - top
+    width = right - left
+
+    if width/height != WH_SCREEN_RATIO:
+        # ???
     game_screen = ImageGrab.grab().crop(window_dimentions)
     return game_screen
 
