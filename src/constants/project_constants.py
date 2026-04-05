@@ -7,5 +7,5 @@ SCREEN_HEIGHT = win32api.GetSystemMetrics(1)
 class GameState(Enum):
     UNOPENED = "unopened",
     INIT = "init",
-    CHAR_SELECT = "CharSelect",
+    CHAR_SELECT = "char_select",
     

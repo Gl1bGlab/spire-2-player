@@ -17,7 +17,7 @@ def find_StS2(hwnd, ctx):
 def get_game_window() -> int:
     win32gui.EnumWindows(find_StS2, None)
     if game_window == None:
-        raise Exception("Slay the Spire 2 window not found")
+        raise Exception("Slay the Spire 2 window not found, please open the game\nIf the game is opened, make sure the name of the window is Slay the Spire 2")
     return game_window
         
 def find_portrait():
