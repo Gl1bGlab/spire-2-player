@@ -10,8 +10,9 @@ def main():
     window_manager = GameWindowHandler()
     curr_state = GameState.UNOPENED
 
-    window_manager.get_hand_image()
+    window_manager.get_draw_pile_pos()
     window_manager.scroll_hand()
+    #window_manager.scroll_hand()
 
     curr_state = GameState.INIT
     # defect_portrait = Image.open("constants\\img_constants\\defect_portrait.jpg")
