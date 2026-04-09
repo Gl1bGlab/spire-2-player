@@ -1,11 +1,12 @@
 import mouse
-import time
+from time import sleep
 
 from win32 import win32gui
 from PIL import ImageGrab
 from PIL.Image import Image
 
 from card_obj import Card, Attack
+from game_stat_handler import GameStatHandler
 from constants.game_constants import WINDOW_NAME
 
 class GameWindowHandler():
@@ -82,58 +83,41 @@ class GameWindowHandler():
         self.game_window_foreground_check()
         self.game_screen_grab()
 
-    def get_hand_image(self)->Image:
-        # factors representing how much the screen should be cropped to get
-        # a good image of the current hand
-        LEFT_FACTOR = .05
-        TOP_FACTOR = .8
-        RIGHT_FACTOR = .95
-
-        self.check_and_grab_game_image()
-        w, h = self.curr_image.size
-        l, t, r, b = w*LEFT_FACTOR, h*TOP_FACTOR, w*RIGHT_FACTOR, h
-
-        self.hand_dimensions = (l, t, r, b)
-        return self.curr_image.crop(self.hand_dimensions)
     
-    def get_draw_pile_pos(self):
-        LEFT_FACTOR = .03
-        TOP_FACTOR = .8
-        RIGHT_FACTOR = .05
-
+    def grab_and_cut_dimensions(self, factors: tuple[int, int, int, int]):
         self.check_and_grab_game_image()
-        w, h = self.curr_image.size
-        l, t, r, b = w*LEFT_FACTOR, h*TOP_FACTOR, w*RIGHT_FACTOR, h
-
-        return ImageGrab.grab().crop((l, t, r, b))
-    
-    def cut_dimensions(self, l_factor=0, t_factor=0, r_factor=0, b_factor=0):
-        self.check_and_grab_game_image()
+        l_factor, t_factor, r_factor, b_factor = factors
         abs_l, abs_t, abs_r, abs_b = self.absolute_dimensions
+
         w, h = self.curr_image.size
         rel_l, rel_t, rel_r, rel_b = w*l_factor, h*t_factor, -w*r_factor, -h*b_factor
-        print(rel_l, rel_t, rel_r, rel_b)
         return (abs_l + rel_l, abs_t + rel_t, abs_r + rel_r, abs_b + rel_b)
 
-    def scroll_hand(self)->list[Image]:
-        LEFT_FACTOR = .05
-        l, t, r, b = self.absolute_dimensions
-        # l *= .7
-        # r *= .7
-        w_tenth = (r - l) / 10
-        mouse.move(l+(l*LEFT_FACTOR), b-(b*.05))
-        #mouse.move(r, b-(b*.05), duration=10)
-        card_images: list[Image] = []
-        curr_l = .12
-        curr_r = .71
-        diff_factor = .059
-        for i in range(11):
-            mouse.move(l+((i)*w_tenth), b-(b*.03))
-            mouse_x, mouse_y = mouse.get_position()
-            card_dimensions = self.cut_dimensions(.10, .6, .10, .35)
-            card_dimensions = self.cut_dimensions(.12 + (i*diff_factor), .6, .71 - (i*diff_factor), .35)
-            time.sleep(1)
-            card_images.append(ImageGrab.grab().crop(card_dimensions))
+    def scroll_hand(self, game_stat_handler: GameStatHandler)->list[str]:
+        hand_size = game_stat_handler.hand_size
 
-        for i, image in enumerate(card_images):
-            image.show()
+        images = []
+        for i in range(hand_size):
+            factors = game_stat_handler.get_hand_size_factor(i)
+            l, x, x, b = self.grab_and_cut_dimensions(factors)
+
+            self.move_card_to_capture_site(l, b)
+            images.append(self.get_card_portrait_image())
+        return images
+
+    def move_card_to_capture_site(self, l, b):
+        factors = (.1, 0, 0, .03)
+        x_l, x, x, x_b = self.grab_and_cut_dimensions(factors)
+
+        mouse.move(l, b)
+        mouse.click()
+
+        mouse.move(x_l, x_b)
+        sleep(.5)
+        mouse.right_click()
+
+    def get_card_portrait_image(self)->str:
+        factors = (.04, .83, .84, .03)
+        card_dimensions = self.grab_and_cut_dimensions(factors)
+        card_image = ImageGrab.grab().crop(card_dimensions)
+        return card_image
