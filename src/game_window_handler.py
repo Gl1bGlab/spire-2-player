@@ -93,7 +93,7 @@ class GameWindowHandler():
         rel_l, rel_t, rel_r, rel_b = w*l_factor, h*t_factor, -w*r_factor, -h*b_factor
         return (abs_l + rel_l, abs_t + rel_t, abs_r + rel_r, abs_b + rel_b)
 
-    def scroll_hand(self, game_stat_handler: GameStatHandler)->list[str]:
+    def scroll_hand(self, game_stat_handler: GameStatHandler)->list[Image]:
         hand_size = game_stat_handler.hand_size
 
         images = []
@@ -103,6 +103,7 @@ class GameWindowHandler():
 
             self.move_card_to_capture_site(l, b)
             images.append(self.get_card_portrait_image())
+            mouse.right_click()
         return images
 
     def move_card_to_capture_site(self, l, b):
@@ -113,10 +114,9 @@ class GameWindowHandler():
         mouse.click()
 
         mouse.move(x_l, x_b)
-        sleep(.5)
-        mouse.right_click()
+        sleep(.37)
 
-    def get_card_portrait_image(self)->str:
+    def get_card_portrait_image(self)->Image:
         factors = (.04, .83, .84, .03)
         card_dimensions = self.grab_and_cut_dimensions(factors)
         card_image = ImageGrab.grab().crop(card_dimensions)

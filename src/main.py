@@ -14,10 +14,10 @@ def main():
     game_stat_manager.set_hand_size(1)
     curr_state = GameState.UNOPENED
 
-    window_manager.scroll_hand(game_stat_manager)
+    #window_manager.scroll_hand(game_stat_manager)
 
-    # for image in window_manager.scroll_hand(game_stat_manager):
-    #     image.show()
+    for image in window_manager.scroll_hand(game_stat_manager):
+        image.show()
 
     curr_state = GameState.INIT
     # defect_portrait = Image.open("constants\\img_constants\\defect_portrait.jpg").convert("RGB").quantize(colors=100)
