@@ -20,25 +20,34 @@ class GameStatHandler():
         elif size <= 10:
             self.hand_size_category = HandSizeCategories.HIGH
         else:
-            raise ValueError("Hand size out of range")
+            raise ValueError(f"Hand size out of range: {self}")
 
 
     def get_hand_size_factor(self, i)->tuple[int, int, int, int]:
-
         match self.hand_size_category:
             case HandSizeCategories.ZERO:
-                return (0, 0, 0, 0)
+                raise Exception("Tried to take image of 0 size hand")
             
             case HandSizeCategories.LOW:
+                low_base = .33
+                first_card_factor = -(self.hand_size - 5) * .05
                 i_factor = i * .073
-                return (.33 + i_factor, 0, 0, .05)
+
+                return (low_base + i_factor + first_card_factor, 0, 0, .05)
             
             case HandSizeCategories.HIGH:
+                raise NotImplementedError("High hand sizes not implemented")
                 i_factor = i * .073
                 return (.26 + i_factor, 0, 0, .05)
             
     def __repr__(self):
-        return f"GameStatHandler(game_state={self.game_state}, hand_size={self.hand_size}, draw_relics={self.draw_relics})"
+        return f"""GameStatHandler(
+    game_state={self.game_state},
+    hand_size={self.hand_size},
+    hand_size_category={self.hand_size_category},
+    draw_relics={self.draw_relics},
+    curr_turn={self.curr_turn},
+)"""
 
 class FightHandler(GameStatHandler):
     def __init__(self):

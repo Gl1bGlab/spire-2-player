@@ -11,11 +11,11 @@ from game_stat_handler import GameStatHandler
 def main():
     window_manager = GameWindowHandler()
     game_stat_manager = GameStatHandler()
-    game_stat_manager.set_hand_size(6)
+    game_stat_manager.set_hand_size(2)
     curr_state = GameState.UNOPENED
 
+    window_manager.scroll_hand(game_stat_manager)
 
-    print(window_manager.scroll_hand(game_stat_manager))
     # for image in window_manager.scroll_hand(game_stat_manager):
     #     image.show()
 
