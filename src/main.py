@@ -11,7 +11,7 @@ from game_stat_handler import GameStatHandler
 def main():
     window_manager = GameWindowHandler()
     game_stat_manager = GameStatHandler()
-    game_stat_manager.set_hand_size(2)
+    game_stat_manager.set_hand_size(1)
     curr_state = GameState.UNOPENED
 
     window_manager.scroll_hand(game_stat_manager)

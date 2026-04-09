@@ -17,8 +17,16 @@ class GameStatHandler():
             self.hand_size_category = HandSizeCategories.ZERO
         elif size <= 5:
             self.hand_size_category = HandSizeCategories.LOW
-        elif size <= 10:
-            self.hand_size_category = HandSizeCategories.HIGH
+        elif size == 6:
+            self.hand_size_category =  HandSizeCategories.SIX
+        elif size == 7:
+            self.hand_size_category = HandSizeCategories.SEVEN
+        elif size == 8:
+            self.hand_size_category =  HandSizeCategories.EIGHT
+        elif size == 9:
+            self.hand_size_category =  HandSizeCategories.NINE
+        elif size == 10:
+            self.hand_size_category = HandSizeCategories.TEN
         else:
             raise ValueError(f"Hand size out of range: {self}")
 
@@ -31,14 +39,34 @@ class GameStatHandler():
             case HandSizeCategories.LOW:
                 low_base = .33
                 first_card_factor = -(self.hand_size - 5) * .05
-                i_factor = i * .073
+                i_factor = i * .093
 
                 return (low_base + i_factor + first_card_factor, 0, 0, .05)
             
-            case HandSizeCategories.HIGH:
-                raise NotImplementedError("High hand sizes not implemented")
-                i_factor = i * .073
-                return (.26 + i_factor, 0, 0, .05)
+            case HandSizeCategories.SIX:
+                six_base = .27
+                i_factor = i * .096
+                return (six_base + i_factor, 0, 0, .05)
+            
+            case HandSizeCategories.SEVEN:
+                seven_base = .22
+                i_factor = i * .095
+                return (seven_base + i_factor, 0, 0, .05)
+            
+            case HandSizeCategories.EIGHT:
+                eight_base = .2
+                i_factor = i * .085
+                return (eight_base + i_factor, 0, 0, .05)
+
+            case HandSizeCategories.NINE:
+                nine_base = .18
+                i_factor = i * .08
+                return (nine_base + i_factor, 0, 0, .05)            
+
+            case HandSizeCategories.TEN:
+                ten_base = .17
+                i_factor = i * .075
+                return (ten_base + i_factor, 0, 0, .05)
             
     def __repr__(self):
         return f"""GameStatHandler(
