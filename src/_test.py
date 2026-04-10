@@ -6,7 +6,7 @@ from constants.project_constants import GameState, CARD_PORTRAIT_PATH
 from constants.game_constants import IMPORTANT_CARDS
 from game_window_handler import GameWindowHandler
 from game_stat_handler import GameStatHandler
-from card_obj import card_creator
+from card_obj import card_portrait_to_card
 from __file_manager import *
 
 def main():

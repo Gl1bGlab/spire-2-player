@@ -4,6 +4,7 @@ from os.path import join
 from PIL.Image import Image, open
 from PIL import ImageChops
 
+from constants.game_constants import IMPORTANT_CARDS
 from constants.project_constants import CARD_PORTRAIT_PATH, ACCEPTABLE_IMAGE_DIFF
 
 class Card():
@@ -33,12 +34,14 @@ class Attack(Card):
         repr_str = super().__repr__()
         return repr_str + f"\nAttack(damage={self.damage}, curr_times={self.curr_times})"
 
-def card_creator(new_card_portrait: Image)->Card:
-    for portrait_file in listdir(CARD_PORTRAIT_PATH):
-        portrait_file = join(CARD_PORTRAIT_PATH, portrait_file)
+def card_portrait_to_card(new_card_name: Image)->Card:
+    for card_name, card_data in IMPORTANT_CARDS.items():
+        if card_name == new_card_name:
+            new_card_portrait = open(card_data["path"])
 
-        curr_portrait = open(portrait_file)
-        count_color(ImageChops.difference(new_card_portrait, curr_portrait))
+
+        curr_portrait = open(card_data["path"])
+        count_color(ImageChops.difference(new_card_name, curr_portrait))
 
 
 # thx to https://www.geeksforgeeks.org/python/find-most-used-colors-in-image-using-python/
