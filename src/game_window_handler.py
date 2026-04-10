@@ -27,7 +27,7 @@ class GameWindowHandler():
     # thx to Pedro Lobito from https://stackoverflow.com/questions/55547940/how-to-get-a-list-of-the-name-of-every-open-window
     def find_StS2(self, hwnd:int, ctx):
         if win32gui.IsWindowVisible(hwnd):
-            if win32gui.GetWindowText(hwnd) != f"{WINDOW_NAME}" or self.window != None:
+            if win32gui.GetWindowText(hwnd) != WINDOW_NAME:
                 return
             self.window = hwnd
             print(f"{WINDOW_NAME} window found at {hex(hwnd)}")
@@ -104,6 +104,7 @@ class GameWindowHandler():
             self.move_card_to_capture_site(l, b)
             images.append(self.get_card_portrait_image())
             mouse.right_click()
+            sleep(.2)
         return images
 
     def move_card_to_capture_site(self, l, b):
@@ -114,10 +115,10 @@ class GameWindowHandler():
         mouse.click()
 
         mouse.move(x_l, x_b)
-        sleep(.37)
+        sleep(.5)
 
     def get_card_portrait_image(self)->Image:
-        factors = (.04, .83, .84, .03)
+        factors = (.04, .78, .84, .03)
         card_dimensions = self.grab_and_cut_dimensions(factors)
         card_image = ImageGrab.grab().crop(card_dimensions)
         return card_image

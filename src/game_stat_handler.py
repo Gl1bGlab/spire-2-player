@@ -39,7 +39,7 @@ class GameStatHandler():
             case HandSizeCategories.LOW:
                 low_base = .33
                 first_card_factor = -(self.hand_size - 5) * .05
-                i_factor = i * .093
+                i_factor = i * .09
 
                 return (low_base + i_factor + first_card_factor, 0, 0, .05)
             
