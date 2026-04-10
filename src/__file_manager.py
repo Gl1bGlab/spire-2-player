@@ -1,8 +1,10 @@
+import os
+import shutil
+
 from uuid import uuid4
 from PIL.Image import Image
 
-import os
-import shutil
+from constants.project_constants import CARD_PORTRAIT_PATH
 
 def gen_image_file(img: Image)->str:
     rand_path = f"constants\\img_constants\\temp\\_{str(uuid4())[:8]}.png"
@@ -11,10 +13,27 @@ def gen_image_file(img: Image)->str:
     return rand_path
 
 def clear_temp()->None:
-    for file in os.listdir("constants\\img_constants\\temp"):
-        curr_file = os.path.dirname(__file__)
-        constants_path = os.path.join(curr_file, "constants\\img_constants\\temp")
-        src = os.path.join(constants_path, file)
-        dst = os.path.normpath(os.path.join(constants_path, "..", file))
-        path = open(dst, "w")
+    temp_path = os.path.join(CARD_PORTRAIT_PATH, "temp")
+
+    for file in os.listdir(temp_path):
+        src = os.path.join(temp_path, file)
+        dst = os.path.normpath(os.path.join(temp_path, "..", file))
+
+        open(dst, "w")
         shutil.move(os.path.abspath(src), os.path.abspath(dst))
+
+# def move_portraits()->None:
+#     constants_path = os.path.join(CARD_PORTRAIT_PATH)
+
+#     for file in os.listdir(CARD_PORTRAIT_PATH):
+#         if file[0] != "_":
+#             continue
+
+#         src = os.path.join(CARD_PORTRAIT_PATH, file)
+#         dst = os.path.normpath(os.path.join(CARD_PORTRAIT_PATH, "card_portraits", file))
+
+#         open(dst, "w")
+#         shutil.move(os.path.abspath(src), os.path.abspath(dst))
+
+def ensure_clean_images()->None:
+    raise NotImplementedError("ensure clean images doesn't exist idiot")

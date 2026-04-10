@@ -1,5 +1,10 @@
+from os.path import dirname, join, normpath
 from enum import Enum
-from win32 import win32api
+
+SRC_PATH = normpath(join(dirname(__file__), ".."))
+CARD_PORTRAIT_PATH = normpath(join(SRC_PATH, "constants\\img_constants\\card_portraits"))
+
+ACCEPTABLE_IMAGE_DIFF = 15
 
 class GameState(Enum):
     UNOPENED = "unopened",
