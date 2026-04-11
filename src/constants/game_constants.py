@@ -23,6 +23,13 @@ class DrawRelics(Enum):
     SNEK_EYE = "Snecko Eye",
     BIG_MUSH = "Big Mushroom",
 
+class CardTypes(Enum):
+    ATTACK = "attack"
+    SKILL = "skill"
+    POWER = "power"
+    STATUS = "status"
+    CURSE = "curse"
+
 class SpecialTypes(Enum):
     VARIABLE_DRAW = "variable draw",
     CONSTANT_DRAW = "constant draw",
@@ -35,17 +42,21 @@ class CardDataTypes(Enum):
     ENERGY_COST = "cost",
     SPECIAL = "special",
     DRAW_DIFF = "draw diff",
+    TYPE = "type",
+
 
 IMPORTANT_CARDS = {
     "Compile Driver": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Compile_Driver.png"),
         CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.TYPE: CardTypes.ATTACK,
 
         CardDataTypes.SPECIAL: SpecialTypes.VARIABLE_DRAW,
     },
     "Coolheaded":{
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Coolheaded.png"),
         CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.TYPE: CardTypes.SKILL,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 1,
@@ -53,16 +64,19 @@ IMPORTANT_CARDS = {
     "Feral": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Feral.png"),
         CardDataTypes.ENERGY_COST: 2,
+        CardDataTypes.TYPE: CardTypes.ATTACK,
     },
     "FTL": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_FTL.png"),
         CardDataTypes.ENERGY_COST: 0,
+        CardDataTypes.TYPE: CardTypes.ATTACK,
 
         CardDataTypes.SPECIAL: SpecialTypes.VARIABLE_DRAW,
     },
     "Hologram": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Hologram.png"),
         CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.TYPE: CardTypes.SKILL,
 
         CardDataTypes.SPECIAL: SpecialTypes.SEARCH_AND_ADD,
         CardDataTypes.DRAW_DIFF: 1,
@@ -70,10 +84,20 @@ IMPORTANT_CARDS = {
     "Iteration": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Iteration.png"),
         CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.TYPE: CardTypes.POWER,
+    },
+    "Neow's Fury": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Neows_Fury.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.TYPE: CardTypes.ATTACK,
+
+        CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
+        CardDataTypes.DRAW_DIFF: 2,
     },
     "Overclock": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Overclock.png"),
         CardDataTypes.ENERGY_COST: 0,
+        CardDataTypes.TYPE: CardTypes.SKILL,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 2,
@@ -81,6 +105,7 @@ IMPORTANT_CARDS = {
     "Scavenge": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Scavenge.png"),
         CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.TYPE: CardTypes.SKILL,
 
         CardDataTypes.SPECIAL: SpecialTypes.SELECT_AND_EXHAUST,
         CardDataTypes.DRAW_DIFF: -1,
@@ -88,12 +113,14 @@ IMPORTANT_CARDS = {
     "Scrape": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Scrape.png"),
         CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.TYPE: CardTypes.ATTACK,
 
         CardDataTypes.SPECIAL: SpecialTypes.VARIABLE_DRAW,
     },
     "Skim": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Skim.png"),
         CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.TYPE: CardTypes.SKILL,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 3,
@@ -101,6 +128,7 @@ IMPORTANT_CARDS = {
     "Slimed": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Slimed.png"),
         CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.TYPE: CardTypes.STATUS,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 1,
@@ -108,6 +136,7 @@ IMPORTANT_CARDS = {
     "Sweeping Beam": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Sweeping_Beam.png"),
         CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.TYPE: CardTypes.ATTACK,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 1,
@@ -115,12 +144,14 @@ IMPORTANT_CARDS = {
     "Uproar": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Uproar.png"),
         CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.TYPE: CardTypes.ATTACK,
 
         CardDataTypes.SPECIAL: SpecialTypes.VARIABLE_DRAW,
     },
     "White Noise": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_White_Noise.png"),
         CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.TYPE: CardTypes.SKILL,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 1,

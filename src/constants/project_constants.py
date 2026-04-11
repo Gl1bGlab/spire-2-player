@@ -4,7 +4,7 @@ from enum import Enum
 SRC_PATH = normpath(join(dirname(__file__), ".."))
 CARD_PORTRAIT_PATH = normpath(join(SRC_PATH, "constants\\img_constants\\card_portraits"))
 
-ACCEPTABLE_IMAGE_DIFF = 15
+ACCEPTABLE_IMAGE_DIFF = 20
 
 class GameState(Enum):
     UNOPENED = "unopened",

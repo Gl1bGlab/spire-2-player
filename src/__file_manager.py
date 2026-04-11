@@ -5,6 +5,13 @@ from uuid import uuid4
 from PIL.Image import Image
 
 from constants.project_constants import CARD_PORTRAIT_PATH
+from game_window_handler import GameWindowHandler
+from game_stat_handler import GameStatHandler
+
+def scroll_and_gen(window_handler: GameWindowHandler, stat_handler: GameStatHandler):
+    portraits = window_handler.scroll_hand(stat_handler)
+    for portrait in portraits:
+        gen_image_file(portrait)
 
 def gen_image_file(img: Image)->str:
     rand_path = f"constants\\img_constants\\temp\\_{str(uuid4())[:8]}.png"
