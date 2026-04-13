@@ -43,9 +43,13 @@ class CardDataTypes(Enum):
     SPECIAL = "special",
     DRAW_DIFF = "draw diff",
     TYPE = "type",
+    PLAY_TYPE = "play type",
 
+class PlayTypes(Enum):
+    TARGET_ENEMY = "target enemy",
+    NO_TARGET = "no target",
 
-IMPORTANT_CARDS = {
+CARDS = {
     "Compile Driver": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Compile_Driver.png"),
         CardDataTypes.ENERGY_COST: 1,
@@ -101,6 +105,14 @@ IMPORTANT_CARDS = {
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 2,
+    },
+    "Rocket Punch": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Rocket_Punch.png"),
+        CardDataTypes.ENERGY_COST: 2,
+        CardDataTypes.TYPE: CardTypes.ATTACK,
+
+        CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
+        CardDataTypes.DRAW_DIFF: 1,
     },
     "Scavenge": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Scavenge.png"),

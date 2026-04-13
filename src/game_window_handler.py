@@ -5,7 +5,6 @@ from win32 import win32gui
 from PIL import ImageGrab
 from PIL.Image import Image
 
-from card_obj import Card, Attack
 from game_stat_handler import GameStatHandler
 from constants.game_constants import WINDOW_NAME
 
@@ -84,7 +83,7 @@ class GameWindowHandler():
         self.game_screen_grab()
 
     
-    def grab_and_cut_dimensions(self, factors: tuple[int, int, int, int]):
+    def grab_and_cut_dimensions(self, factors: tuple[int, int, int, int])->tuple[int, int, int, int]:
         self.check_and_grab_game_image()
         l_factor, t_factor, r_factor, b_factor = factors
         abs_l, abs_t, abs_r, abs_b = self.absolute_dimensions
@@ -92,6 +91,12 @@ class GameWindowHandler():
         w, h = self.curr_image.size
         rel_l, rel_t, rel_r, rel_b = w*l_factor, h*t_factor, -w*r_factor, -h*b_factor
         return (abs_l + rel_l, abs_t + rel_t, abs_r + rel_r, abs_b + rel_b)
+    
+    def mouse_to_card_pos(self, card_pos: int, l: int, b: int)->None:
+        """
+        TODO: make this function
+        """
+        pass
 
     def scroll_hand(self, game_stat_handler: GameStatHandler)->list[Image]:
         hand_size = game_stat_handler.hand_size
@@ -122,3 +127,9 @@ class GameWindowHandler():
         card_dimensions = self.grab_and_cut_dimensions(factors)
         card_image = ImageGrab.grab().crop(card_dimensions)
         return card_image
+    
+    def play_card(self, hand_pos: int, game_stat_handler: GameStatHandler)->None:
+        """
+        TODO: make this function
+        """
+        pass

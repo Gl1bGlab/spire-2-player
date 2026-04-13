@@ -14,11 +14,81 @@ class GameState(Enum):
 # Hand sizes greater than 5 squish the cards closer per
 # card added. This creates the need for specific calculations
 # depending on how close the cards are with larger hands.
-class HandSizeCategories(Enum):
-    ZERO = "hand size: 0",
-    LOW = "low hand sizes: 1, 2, 3, 4, 5",
-    SIX = "hand size: 6",
-    SEVEN = "hand size: 7",
-    EIGHT = "hand size: 8",
-    NINE = "hand size: 9",
-    TEN = "hand size: 10",
+
+class HandSizeParameterTypes(Enum):
+    BASE = "base",
+    FIRST_CARD_FACTOR = "first card factor",
+    INDEX_FACTOR = "index factor",
+
+class HandSizes(Enum):
+    ZERO = "zero",
+    ONE = "one",
+    TWO = "two",
+    THREE = "three",
+    FOUR = "four",
+    FIVE = "five",
+    SIX = "six",
+    SEVEN = "seven",
+    EIGHT = "eight",
+    NINE = "nine",
+    TEN = "ten",
+
+HAND_SIZE_PARAMETERS = {
+    HandSizes.ZERO: {
+        HandSizeParameterTypes.BASE: None,
+        HandSizeParameterTypes.FIRST_CARD_FACTOR: None,
+        HandSizeParameterTypes.INDEX_FACTOR: None,
+    },
+    HandSizes.ONE: {
+        HandSizeParameterTypes.BASE: .33,
+        HandSizeParameterTypes.FIRST_CARD_FACTOR: .2,
+        HandSizeParameterTypes.INDEX_FACTOR: 0,
+    },
+    HandSizes.TWO: {
+        HandSizeParameterTypes.BASE: .33,
+        HandSizeParameterTypes.FIRST_CARD_FACTOR: .15,
+        HandSizeParameterTypes.INDEX_FACTOR: .09,
+    },
+    HandSizes.THREE: {
+        HandSizeParameterTypes.BASE: .33,
+        HandSizeParameterTypes.FIRST_CARD_FACTOR: .1,
+        HandSizeParameterTypes.INDEX_FACTOR: .09,
+    },
+    HandSizes.FOUR: {
+        HandSizeParameterTypes.BASE: .33,
+        HandSizeParameterTypes.FIRST_CARD_FACTOR: .05,
+        HandSizeParameterTypes.INDEX_FACTOR: .09,
+    },
+    HandSizes.FIVE: {
+        HandSizeParameterTypes.BASE: .33,
+        HandSizeParameterTypes.FIRST_CARD_FACTOR: 0,
+        HandSizeParameterTypes.INDEX_FACTOR: .09,
+    },
+    HandSizes.SIX: {
+        HandSizeParameterTypes.BASE: .27,
+        HandSizeParameterTypes.FIRST_CARD_FACTOR: 0,
+        HandSizeParameterTypes.INDEX_FACTOR: .096,
+    },
+    HandSizes.SEVEN: {
+        HandSizeParameterTypes.BASE: .22,
+        HandSizeParameterTypes.FIRST_CARD_FACTOR: 0,
+        HandSizeParameterTypes.INDEX_FACTOR: .095,
+    },
+    HandSizes.EIGHT: {
+        HandSizeParameterTypes.BASE: .2,
+        HandSizeParameterTypes.FIRST_CARD_FACTOR: 0,
+        HandSizeParameterTypes.INDEX_FACTOR: .085,
+    },
+    HandSizes.NINE: {
+        HandSizeParameterTypes.BASE: .18,
+        HandSizeParameterTypes.FIRST_CARD_FACTOR: 0,
+        HandSizeParameterTypes.INDEX_FACTOR: .08,
+    },
+    HandSizes.TEN: {
+        HandSizeParameterTypes.BASE: .17,
+        HandSizeParameterTypes.FIRST_CARD_FACTOR: 0,
+        HandSizeParameterTypes.INDEX_FACTOR: .075,
+    },
+}
+
+BOTTOM_FACTOR_CONST = .05
