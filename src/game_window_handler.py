@@ -99,8 +99,8 @@ class GameWindowHandler():
         pass
 
     def scroll_hand(self, game_stat_handler: GameStatHandler)->list[Image]:
-        hand_size = game_stat_handler.hand_size
-
+        hand_size = game_stat_handler.hand_size.value
+        
         images = []
         for i in range(hand_size):
             factors = game_stat_handler.get_hand_size_factor(i)

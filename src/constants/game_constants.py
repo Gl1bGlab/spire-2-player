@@ -6,22 +6,22 @@ from constants.project_constants import CARD_PORTRAIT_PATH
 WINDOW_NAME = "Slay the Spire 2"
 
 class DrawRelics(Enum):
-    BAG_OF_PREP = "Bag of Preparation",
-    CENT_PUZZLE = "Centennial Puzzle",
-    PENDULUM = "Pendulum",
-    GREM_HORN = "Gremlin Horn",
-    JOSS_PAPER = "Joss Paper",
-    GAME_PIECE = "Game Piece",
-    PKTWATCH = "Pocketwatch",
-    UNCEACING_T = "Unceasing Top",
-    PWR_CELL = "Power Cell",
-    BMING_CONCH = "Booming Conch",
-    PAEL_BLOOD = "Pael's Blood",
-    IRON_CLUB = "Iron Club",
-    FIDDLE = "Fiddle",
-    JEWEL_MASK = "Jeweled Mask",
-    SNEK_EYE = "Snecko Eye",
-    BIG_MUSH = "Big Mushroom",
+    BAG_OF_PREP = "Bag of Preparation"
+    CENT_PUZZLE = "Centennial Puzzle"
+    PENDULUM = "Pendulum"
+    GREM_HORN = "Gremlin Horn"
+    JOSS_PAPER = "Joss Paper"
+    GAME_PIECE = "Game Piece"
+    PKTWATCH = "Pocketwatch"
+    UNCEACING_T = "Unceasing Top"
+    PWR_CELL = "Power Cell"
+    BMING_CONCH = "Booming Conch"
+    PAEL_BLOOD = "Pael's Blood"
+    IRON_CLUB = "Iron Club"
+    FIDDLE = "Fiddle"
+    JEWEL_MASK = "Jeweled Mask"
+    SNEK_EYE = "Snecko Eye"
+    BIG_MUSH = "Big Mushroom"
 
 class CardTypes(Enum):
     ATTACK = "attack"
@@ -31,23 +31,23 @@ class CardTypes(Enum):
     CURSE = "curse"
 
 class SpecialTypes(Enum):
-    VARIABLE_DRAW = "variable draw",
-    CONSTANT_DRAW = "constant draw",
-    SEARCH_AND_ADD = "search and add",
-    SELECT_AND_EXHAUST = "select and exhaust",
-    UNIQUE = "unique",
+    VARIABLE_DRAW = "variable draw"
+    CONSTANT_DRAW = "constant draw"
+    SEARCH_AND_ADD = "search and add"
+    SELECT_AND_EXHAUST = "select and exhaust"
+    UNIQUE = "unique"
 
 class CardDataTypes(Enum):
-    PORTRAIT_PATH = "path",
-    ENERGY_COST = "cost",
-    SPECIAL = "special",
-    DRAW_DIFF = "draw diff",
-    TYPE = "type",
-    PLAY_TYPE = "play type",
+    PORTRAIT_PATH = "path"
+    ENERGY_COST = "cost"
+    SPECIAL = "special"
+    DRAW_DIFF = "draw diff"
+    TYPE = "type"
+    PLAY_TYPE = "play type"
 
 class PlayTypes(Enum):
-    TARGET_ENEMY = "target enemy",
-    NO_TARGET = "no target",
+    TARGET_ENEMY = "target enemy"
+    NO_TARGET = "no target"
 
 CARDS = {
     "Compile Driver": {

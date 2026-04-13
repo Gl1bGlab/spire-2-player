@@ -7,31 +7,31 @@ CARD_PORTRAIT_PATH = normpath(join(SRC_PATH, "constants\\img_constants\\card_por
 ACCEPTABLE_IMAGE_DIFF = 20
 
 class GameState(Enum):
-    UNOPENED = "unopened",
-    INIT = "init",
-    CHAR_SELECT = "char_select",
+    UNOPENED = "unopened"
+    INIT = "init"
+    CHAR_SELECT = "char_select"
     
 # Hand sizes greater than 5 squish the cards closer per
 # card added. This creates the need for specific calculations
 # depending on how close the cards are with larger hands.
 
 class HandSizeParameterTypes(Enum):
-    BASE = "base",
-    FIRST_CARD_FACTOR = "first card factor",
-    INDEX_FACTOR = "index factor",
+    BASE = "base"
+    FIRST_CARD_FACTOR = "first card factor"
+    INDEX_FACTOR = "index factor"
 
 class HandSizes(Enum):
-    ZERO = "zero",
-    ONE = "one",
-    TWO = "two",
-    THREE = "three",
-    FOUR = "four",
-    FIVE = "five",
-    SIX = "six",
-    SEVEN = "seven",
-    EIGHT = "eight",
-    NINE = "nine",
-    TEN = "ten",
+    ZERO = 0
+    ONE = 1
+    TWO = 2
+    THREE = 3
+    FOUR = 4
+    FIVE = 5
+    SIX = 6
+    SEVEN = 7
+    EIGHT = 8
+    NINE = 9
+    TEN = 10
 
 HAND_SIZE_PARAMETERS = {
     HandSizes.ZERO: {

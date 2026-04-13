@@ -7,7 +7,7 @@ from PIL import ImageChops
 from constants.game_constants import CARDS, CardDataTypes, SpecialTypes, CardTypes
 from constants.project_constants import CARD_PORTRAIT_PATH, ACCEPTABLE_IMAGE_DIFF
 # from game_window_handler import GameWindowHandler
-from game_stat_handler import GameStatHandler
+# from game_stat_handler import GameStatHandler
 
 class Card():
     def __init__(self, hand_position: int,):
@@ -57,8 +57,9 @@ def card_portrait_to_card(new_card_portrait: Image, card_position: int)->Card|Sp
             return SpecialCard(card_position, card_name, energy_cost, draw_diff, special_type)
     return Card(card_position)
 
-def hand_to_cards(window_handler, stat_handler: GameStatHandler)->list[Card|SpecialCard]:
+def hand_to_cards(window_handler, stat_handler)->list[Card|SpecialCard]:
     from game_stat_handler import GameStatHandler
+    from game_window_handler import GameWindowHandler
     cards: list[Card|None] = []
     for i, portrait in enumerate(window_handler.scroll_hand(stat_handler)):
         hand_position = i + 1

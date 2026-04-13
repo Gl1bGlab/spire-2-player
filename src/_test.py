@@ -12,7 +12,7 @@ from __file_manager import *
 def main():
     window_manager = GameWindowHandler()
     stat_manager = GameStatHandler()
-    stat_manager.set_hand_size(5)
+    stat_manager.set_hand_size(3)
     from PIL.Image import open
     curr_state = GameState.UNOPENED
 
@@ -36,6 +36,7 @@ TODO: right now, you're trying to fix an import error.
 after that, make sure the refactoring you did with the hand size factors works.
 after THAT, figure out playing cards.
 then move on to menuing and you should be done whenever that is.
+ALSO: remember to add relic logic.
 """
 
 
