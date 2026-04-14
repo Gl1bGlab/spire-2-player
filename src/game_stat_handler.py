@@ -15,7 +15,7 @@ class GameStatHandler():
         self.hand: list[Card|SpecialCard]|None = None
         self.curr_turn: int = 0
 
-    def set_hand_size(self, size):
+    def set_hand_size(self, size)->None:
         match (size):
             case 0:
                 self.hand_size = HandSizes.ZERO
@@ -50,6 +50,9 @@ class GameStatHandler():
             case 10:
                 self.hand_size = HandSizes.TEN
                 return
+
+    def add_hand_size(self, amount: int)->None:
+        self.set_hand_size(self.hand_size.value + amount)
 
     def get_hand_size_factor(self, i)->tuple[int, int, int, int]:
         if self.hand_size == HandSizes.ZERO:

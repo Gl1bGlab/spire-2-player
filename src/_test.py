@@ -9,15 +9,23 @@ from game_stat_handler import GameStatHandler
 from card_obj import card_portrait_to_card, hand_to_cards
 from __file_manager import *
 
+from mouse import right_click
+
 def main():
     window_manager = GameWindowHandler()
     stat_manager = GameStatHandler()
-    stat_manager.set_hand_size(3)
+    stat_manager.set_hand_size(5)
     from PIL.Image import open
     curr_state = GameState.UNOPENED
 
-    for card in hand_to_cards(window_manager, stat_manager):
-        print(card)
+    card_pos_order = [0,0,0,0,0]
+    for i in range(5):
+        print(stat_manager.hand_size.value)
+        window_manager.play_card(card_pos_order[i], stat_manager)
+        stat_manager.add_hand_size(-1)
+
+    # for card in hand_to_cards(window_manager, stat_manager):
+    #     print(card)
 
     # scroll_and_gen(window_manager, stat_manager)
 
@@ -32,11 +40,19 @@ def main():
     curr_state = GameState.INIT
 
 """
-TODO: right now, you're trying to fix an import error.
-after that, make sure the refactoring you did with the hand size factors works.
-after THAT, figure out playing cards.
-then move on to menuing and you should be done whenever that is.
-ALSO: remember to add relic logic.
+TODO: 
+- find location of enemy via health bar.
+- play card on enemy.
+
+- relic logic
+- special card logic
+(prepare to die edition)
+
+- map navigation
+(look for movement of nodes?)
+
+- menuing
+(probably a lot of image capture)
 """
 
 

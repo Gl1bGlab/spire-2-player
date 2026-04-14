@@ -6,6 +6,9 @@ CARD_PORTRAIT_PATH = normpath(join(SRC_PATH, "constants\\img_constants\\card_por
 
 ACCEPTABLE_IMAGE_DIFF = 20
 
+MOUSE_MOVE_TIME = .5
+MOUSE_PAUSE_TIME = .2
+
 class GameState(Enum):
     UNOPENED = "unopened"
     INIT = "init"
@@ -14,12 +17,10 @@ class GameState(Enum):
 # Hand sizes greater than 5 squish the cards closer per
 # card added. This creates the need for specific calculations
 # depending on how close the cards are with larger hands.
-
 class HandSizeParameterTypes(Enum):
     BASE = "base"
     FIRST_CARD_FACTOR = "first card factor"
     INDEX_FACTOR = "index factor"
-
 class HandSizes(Enum):
     ZERO = 0
     ONE = 1
@@ -32,7 +33,6 @@ class HandSizes(Enum):
     EIGHT = 8
     NINE = 9
     TEN = 10
-
 HAND_SIZE_PARAMETERS = {
     HandSizes.ZERO: {
         HandSizeParameterTypes.BASE: None,
@@ -91,4 +91,10 @@ HAND_SIZE_PARAMETERS = {
     },
 }
 
+# Game screen ratios for moving a card to a specific location
+# and capturing its portriat.
 BOTTOM_FACTOR_CONST = .05
+CARD_CAPTURE_MOUSE_LOCATION = (.1, 0, 0, .03)
+CARD_PORTRAIT_CAPTURE_AREA = (.04, .78, .84, .03)
+
+ENEMY_HEALTH_CAPTURE_AREA = (.5, .6, .1, .27)
