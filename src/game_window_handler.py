@@ -94,6 +94,11 @@ class GameWindowHandler():
         rel_l, rel_t, rel_r, rel_b = w*l_factor, h*t_factor, -w*r_factor, -h*b_factor
         return (abs_l + rel_l, abs_t + rel_t, abs_r + rel_r, abs_b + rel_b)
     
+    def find_xy_factor(self, rel_xy_factor: tuple[float, float, float, float], rel_xy: tuple[int, int])->tuple[float, float, float, float]:
+        rel_x, rel_y = rel_xy
+        rel_l, rel_t, rel_r, rel_b = rel_xy_factor
+        
+
     def mouse_to_factor_pos(self, factors: tuple[float, float, float, float], delay=MOUSE_MOVE_TIME)->None:
         l, x, x, b = factors
         mouse.move(l, b, duration=delay)
@@ -137,7 +142,7 @@ class GameWindowHandler():
 
 
 
-    def _cut_and_show(self)->Image:
+    def _cut_and_show_enemy_health(self)->Image:
         factors = self.grab_and_cut_dimensions(ENEMY_HEALTH_CAPTURE_AREA)
         img = self.curr_image.crop(factors)
         img.show()

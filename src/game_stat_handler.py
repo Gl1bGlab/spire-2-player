@@ -137,11 +137,6 @@ class GameStatHandler():
         return f"""GameStatHandler(
     game_state={self.game_state},
     hand_size={self.hand_size},
-    hand_size_category={self.hand_size_category},
     draw_relics={self.draw_relics},
     curr_turn={self.curr_turn},
 )"""
-
-class FightHandler(GameStatHandler):
-    def __init__(self):
-        super.__init__()

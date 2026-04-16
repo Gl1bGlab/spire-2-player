@@ -20,8 +20,7 @@ class Card():
     def __repr__(self):
         return f"""Card(
     hand_position={self.hand_position},
-)
-"""
+)"""
     
 class SpecialCard(Card):
     def __init__(self, hand_position: int, name: str, cost: int,
@@ -42,8 +41,7 @@ class SpecialCard(Card):
     draw={self.draw},
     cost={self.cost},
     special_type={self.special_type},
-)
-"""
+)"""
     
 def card_portrait_to_card(new_card_portrait: Image, card_position: int)->Card|SpecialCard:
     for card_name, card_data in CARDS.items():

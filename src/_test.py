@@ -1,6 +1,7 @@
 import os
 
-from PIL import ImageChops, Image
+from PIL import ImageChops, Image, ImageGrab
+import numpy
 
 from constants.project_constants import GameState, CARD_PORTRAIT_PATH
 from constants.game_constants import CARDS, CardDataTypes
@@ -9,7 +10,17 @@ from game_stat_handler import GameStatHandler
 from card_obj import card_portrait_to_card, hand_to_cards
 from __file_manager import *
 
-from mouse import right_click
+def find_color_rel_xy(img: Image, color: tuple[int, int, int])->tuple[int, int] | None:
+    width, height = img.size
+
+    for x in range(width):
+        for y in range(height):
+            print(img.getpixel((x, y)))
+            if img.getpixel((x, y)) == color:
+                return x, y
+    return None
+
+
 
 def main():
     window_manager = GameWindowHandler()
@@ -18,11 +29,19 @@ def main():
     from PIL.Image import open
     curr_state = GameState.UNOPENED
 
-    card_pos_order = [0,0,0,0,0]
-    for i in range(5):
-        print(stat_manager.hand_size.value)
-        window_manager.play_card(card_pos_order[i], stat_manager)
-        stat_manager.add_hand_size(-1)
+    window_manager.check_and_grab_game_image()
+    image = window_manager._cut_and_show_enemy_health()
+    color = (241, 55, 62)
+    #Y, X = numpy.where()
+    print(find_color_rel_xy(image, color))
+
+
+
+    # card_pos_order = [0, 0, 0, 0, 0]
+    # for i in range(5):
+    #     print(stat_manager.hand_size.value)
+    #     window_manager.play_card(card_pos_order[i], stat_manager)
+    #     stat_manager.add_hand_size(-1)
 
     # for card in hand_to_cards(window_manager, stat_manager):
     #     print(card)
