@@ -1,5 +1,6 @@
 import mouse
 from time import sleep
+from math import floor
 
 from win32 import win32gui
 from PIL import ImageGrab
@@ -12,10 +13,10 @@ from constants.game_constants import WINDOW_NAME
 
 class GameWindowHandler():
     def __init__(self):
-        self.window: int | None = None
-        self.absolute_dimensions: tuple[float, float, float, float] | None = None
-        self.hand_dimensions: tuple[float, float, float, float] | None = None
-        self.curr_image: Image | None = None
+        self.window: int|None = None
+        self.absolute_dimensions: tuple[float, float, float, float]|None = None
+        self.hand_dimensions: tuple[float, float, float, float]|None = None
+        self.curr_image: Image|None = None
 
         self.set_window()
         self.check_and_grab_game_image()
@@ -85,7 +86,9 @@ class GameWindowHandler():
         self.game_screen_grab()
 
     
-    def grab_and_cut_dimensions(self, factors: tuple[float, float, float, float])->tuple[float, float, float, float]:
+    def grab_and_cut_dimensions(self, 
+                                factors: tuple[float, float, float, float]
+                            )->tuple[float, float, float, float]:
         self.check_and_grab_game_image()
         l_factor, t_factor, r_factor, b_factor = factors
         abs_l, abs_t, abs_r, abs_b = self.absolute_dimensions
@@ -94,12 +97,23 @@ class GameWindowHandler():
         rel_l, rel_t, rel_r, rel_b = w*l_factor, h*t_factor, -w*r_factor, -h*b_factor
         return (abs_l + rel_l, abs_t + rel_t, abs_r + rel_r, abs_b + rel_b)
     
-    def find_xy_factor(self, rel_xy_factor: tuple[float, float, float, float], rel_xy: tuple[int, int])->tuple[float, float, float, float]:
-        rel_x, rel_y = rel_xy
-        rel_l, rel_t, rel_r, rel_b = rel_xy_factor
-        
+    def find_xy_dimensions(self, 
+                       xy_window_factor: tuple[float, float, float, float], 
+                       xy: tuple[int, int],
+                    )->tuple[float, float, float, float]:
+        xy_window_dimensions = self.grab_and_cut_dimensions(xy_window_factor)
+        abs_x, x, x, abs_y = xy_window_dimensions
 
-    def mouse_to_factor_pos(self, factors: tuple[float, float, float, float], delay=MOUSE_MOVE_TIME)->None:
+        x, y = xy
+        abs_x += x
+        abs_y -= y
+        return (abs_x, 0, 0, abs_y)
+
+
+    def mouse_to_dimension_pos(self, 
+                            factors: tuple[float, float, float, float], 
+                            delay=MOUSE_MOVE_TIME
+                        )->None:
         l, x, x, b = factors
         mouse.move(l, b, duration=delay)
 
@@ -119,10 +133,10 @@ class GameWindowHandler():
     def move_card_to_capture_site(self, factors: tuple[float, float, float, float]):
         card_capture_factors = self.grab_and_cut_dimensions(CARD_CAPTURE_MOUSE_LOCATION)
 
-        self.mouse_to_factor_pos(factors)
+        self.mouse_to_dimension_pos(factors)
         mouse.click()
 
-        self.mouse_to_factor_pos(card_capture_factors)
+        self.mouse_to_dimension_pos(card_capture_factors)
         sleep(MOUSE_PAUSE_TIME)
 
     def get_card_portrait_image(self)->Image:
@@ -132,10 +146,10 @@ class GameWindowHandler():
     
     def play_card(self, hand_pos: int, game_stat_handler: GameStatHandler)->None:
         factors = self.grab_and_cut_dimensions(game_stat_handler.get_hand_size_factor(hand_pos))
-        self.mouse_to_factor_pos(factors, delay=0)
+        self.mouse_to_dimension_pos(factors, delay=0)
         sleep(MOUSE_PAUSE_TIME)
         mouse.press()
-        self.mouse_to_factor_pos(self.grab_and_cut_dimensions((.5, 0, 0, .5)))
+        self.mouse_to_dimension_pos(self.grab_and_cut_dimensions((.5, 0, 0, .5)))
         sleep(MOUSE_PAUSE_TIME)
         mouse.release()
 
@@ -145,5 +159,5 @@ class GameWindowHandler():
     def _cut_and_show_enemy_health(self)->Image:
         factors = self.grab_and_cut_dimensions(ENEMY_HEALTH_CAPTURE_AREA)
         img = self.curr_image.crop(factors)
-        img.show()
+        # img.show()
         return img
