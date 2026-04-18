@@ -1,9 +1,9 @@
 import os
 
+import mouse
 from PIL import ImageChops, Image, ImageGrab
-import numpy
 
-from constants.project_constants import GameState, CARD_PORTRAIT_PATH
+from constants.project_constants import GameState, CARD_PORTRAIT_PATH, ENEMY_HEALTH_CAPTURE_AREA
 from constants.game_constants import CARDS, CardDataTypes
 from game_window_handler import GameWindowHandler
 from game_stat_handler import GameStatHandler
@@ -15,7 +15,6 @@ def find_color_rel_xy(img: Image, color: tuple[int, int, int])->tuple[int, int] 
 
     for x in range(width):
         for y in range(height):
-            print(img.getpixel((x, y)))
             if img.getpixel((x, y)) == color:
                 return x, y
     return None
@@ -31,11 +30,13 @@ def main():
 
     window_manager.check_and_grab_game_image()
     image = window_manager._cut_and_show_enemy_health()
-    color = (241, 55, 62)
+    color = (255, 245, 225)
     #Y, X = numpy.where()
-    print(find_color_rel_xy(image, color))
+    xy = find_color_rel_xy(image, color)
 
-
+    xy_factor = window_manager.find_xy_dimensions(ENEMY_HEALTH_CAPTURE_AREA, xy)
+    # window_manager.mouse_to_factor_pos()
+    print(xy_factor)
 
     # card_pos_order = [0, 0, 0, 0, 0]
     # for i in range(5):
