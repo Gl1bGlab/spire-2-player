@@ -49,7 +49,7 @@ class PlayTypes(Enum):
     TARGET_ENEMY = "target enemy"
     NO_TARGET = "no target"
 
-CARDS = {
+CARDS: dict[CardDataTypes] = {
     "Compile Driver": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Compile_Driver.png"),
         CardDataTypes.ENERGY_COST: 1,
@@ -170,3 +170,4 @@ CARDS = {
     },
 }
 
+ENEMY_HEALTH_COLORS: list[tuple] = [(255, 245, 225), (255, 246, 226)]

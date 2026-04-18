@@ -9,7 +9,7 @@ from PIL.Image import Image
 from game_stat_handler import GameStatHandler
 from constants.project_constants import ENEMY_HEALTH_CAPTURE_AREA, CARD_CAPTURE_MOUSE_LOCATION, \
                                         MOUSE_MOVE_TIME, CARD_PORTRAIT_CAPTURE_AREA, MOUSE_PAUSE_TIME
-from constants.game_constants import WINDOW_NAME
+from constants.game_constants import WINDOW_NAME, ENEMY_HEALTH_COLORS
 
 class GameWindowHandler():
     def __init__(self):
@@ -125,7 +125,7 @@ class GameWindowHandler():
             factors = self.grab_and_cut_dimensions(game_stat_handler.get_hand_size_factor(i))
 
             self.move_card_to_capture_site(factors)
-            images.append(self.get_card_portrait_image())
+            images.append(self.grab_and_cut_window_image(CARD_PORTRAIT_CAPTURE_AREA))
             mouse.right_click()
             sleep(MOUSE_PAUSE_TIME)
         return images
@@ -139,8 +139,8 @@ class GameWindowHandler():
         self.mouse_to_dimension_pos(card_capture_factors)
         sleep(MOUSE_PAUSE_TIME)
 
-    def get_card_portrait_image(self)->Image:
-        card_dimensions = self.grab_and_cut_dimensions(CARD_PORTRAIT_CAPTURE_AREA)
+    def grab_and_cut_window_image(self, window_factors)->Image:
+        card_dimensions = self.grab_and_cut_dimensions(window_factors)
         card_image = ImageGrab.grab().crop(card_dimensions)
         return card_image
     
@@ -149,15 +149,28 @@ class GameWindowHandler():
         self.mouse_to_dimension_pos(factors, delay=0)
         sleep(MOUSE_PAUSE_TIME)
         mouse.press()
-        self.mouse_to_dimension_pos(self.grab_and_cut_dimensions((.5, 0, 0, .5)))
-        sleep(MOUSE_PAUSE_TIME)
+        self.mouse_to_enemy()
         mouse.release()
 
 
+    def mouse_to_enemy(self):
+        self.check_and_grab_game_image()
+        image = self.grab_and_cut_window_image(ENEMY_HEALTH_CAPTURE_AREA)
+        for color in ENEMY_HEALTH_COLORS:
+            xy = find_color_rel_xy(image, color)
+            if xy != None:
+                break
+        if xy == None:
+            raise Exception("Enemy health bar not found")
 
+        xy_factor = self.find_xy_dimensions(ENEMY_HEALTH_CAPTURE_AREA, xy)
+        self.mouse_to_dimension_pos(xy_factor)
 
-    def _cut_and_show_enemy_health(self)->Image:
-        factors = self.grab_and_cut_dimensions(ENEMY_HEALTH_CAPTURE_AREA)
-        img = self.curr_image.crop(factors)
-        # img.show()
-        return img
+def find_color_rel_xy(img: Image, color: tuple[int, int, int])->tuple[int, int] | None:
+    width, height = img.size
+
+    for x in reversed(range(width)):
+        for y in reversed(range(height)):
+            if img.getpixel((x, y)) == color:
+                return x, y
+    return None
