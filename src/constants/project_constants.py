@@ -7,7 +7,7 @@ CARD_PORTRAIT_PATH = normpath(join(SRC_PATH, "constants\\img_constants\\card_por
 ACCEPTABLE_IMAGE_DIFF = 20
 
 MOUSE_MOVE_TIME = .5
-MOUSE_PAUSE_TIME = .2
+MOUSE_PAUSE_TIME = .4
 
 class GameState(Enum):
     UNOPENED = "unopened"

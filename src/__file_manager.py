@@ -1,4 +1,5 @@
 import os
+from os.path import join, normpath, abspath
 import shutil
 
 from uuid import uuid4
@@ -14,20 +15,20 @@ def scroll_and_gen(window_handler: GameWindowHandler, stat_handler: GameStatHand
         gen_image_file(portrait)
 
 def gen_image_file(img: Image)->str:
-    rand_path = f"constants\\img_constants\\temp\\_{str(uuid4())[:8]}.png"
+    rand_path = normpath(join(CARD_PORTRAIT_PATH, f"..\\temp\\_{str(uuid4())[:8]}.png"))
     file = open(rand_path, "w")
     img.save(rand_path)
     return rand_path
 
 def clear_temp()->None:
-    temp_path = os.path.join(CARD_PORTRAIT_PATH, "temp")
+    temp_path = normpath(join(CARD_PORTRAIT_PATH, "..\\temp"))
 
     for file in os.listdir(temp_path):
-        src = os.path.join(temp_path, file)
-        dst = os.path.normpath(os.path.join(temp_path, "..", file))
+        src = join(temp_path, file)
+        dst = normpath(join(temp_path, "..\\card_portraits", file))
 
         open(dst, "w")
-        shutil.move(os.path.abspath(src), os.path.abspath(dst))
+        shutil.move(abspath(src), abspath(dst))
 
 # def move_portraits()->None:
 #     constants_path = os.path.join(CARD_PORTRAIT_PATH)

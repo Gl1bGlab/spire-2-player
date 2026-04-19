@@ -1,7 +1,8 @@
-import mouse
+from typing import Callable
 from time import sleep
 from math import floor
 
+import mouse
 from win32 import win32gui
 from PIL import ImageGrab
 from PIL.Image import Image
@@ -21,18 +22,19 @@ class GameWindowHandler():
         self.set_window()
         self.check_and_grab_game_image()
 
-    def set_window(self) -> int:
+    def set_window(self):
         win32gui.EnumWindows(self.find_StS2, None)
         if self.window == None:
             raise Exception(f"{WINDOW_NAME} window not found, please open the game\nIf the game is opened, make sure the name of the window is {WINDOW_NAME}")
     
     # thx to Pedro Lobito from https://stackoverflow.com/questions/55547940/how-to-get-a-list-of-the-name-of-every-open-window
     def find_StS2(self, hwnd:int, ctx):
-        if win32gui.IsWindowVisible(hwnd):
-            if win32gui.GetWindowText(hwnd) != WINDOW_NAME:
-                return
-            self.window = hwnd
-            print(f"{WINDOW_NAME} window found at {hex(hwnd)}")
+        if not win32gui.IsWindowVisible(hwnd):
+            pass
+        if win32gui.GetWindowText(hwnd) != WINDOW_NAME:
+            return
+        self.window = hwnd
+        print(f"{WINDOW_NAME} window found at ID {hex(hwnd)}")
 
     def game_window_still_exists_check(self)->None:
         if not win32gui.IsWindow(self.window) or win32gui.GetWindowText(self.window) != WINDOW_NAME:
@@ -42,13 +44,16 @@ class GameWindowHandler():
         msg_printed = False
         while win32gui.GetForegroundWindow() != self.window:
             if not msg_printed:
-                print(f"Waiting for {WINDOW_NAME} to be the foreground window")
+                print(f"Waiting for {self.window} to be the foreground window")
                 msg_printed = True
-            pass
+            if not win32gui.IsWindow(self.window) or (win32gui.GetWindowText(self.window) != WINDOW_NAME):
+                self.window = None
+                self.game_window_still_exists_check()
+
 
     def game_screen_grab(self)->None:
         self.absolute_dimensions = win32gui.GetWindowRect(self.window)
-        self.title_bar_offset()
+        # self.title_bar_offset()
         self.window_size_normalizer()
         self.curr_image = ImageGrab.grab().crop(self.absolute_dimensions)
 
@@ -85,7 +90,7 @@ class GameWindowHandler():
         self.game_window_foreground_check()
         self.game_screen_grab()
 
-    
+
     def grab_and_cut_dimensions(self, 
                                 factors: tuple[float, float, float, float]
                             )->tuple[float, float, float, float]:
@@ -152,7 +157,6 @@ class GameWindowHandler():
         self.mouse_to_enemy()
         mouse.release()
 
-
     def mouse_to_enemy(self):
         self.check_and_grab_game_image()
         image = self.grab_and_cut_window_image(ENEMY_HEALTH_CAPTURE_AREA)
@@ -165,6 +169,7 @@ class GameWindowHandler():
 
         xy_factor = self.find_xy_dimensions(ENEMY_HEALTH_CAPTURE_AREA, xy)
         self.mouse_to_dimension_pos(xy_factor)
+
 
 def find_color_rel_xy(img: Image, color: tuple[int, int, int])->tuple[int, int] | None:
     width, height = img.size

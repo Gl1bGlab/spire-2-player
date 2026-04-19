@@ -19,19 +19,21 @@ def main():
     from PIL.Image import open
     curr_state = GameState.UNOPENED
 
-    mouse.move(0,0, duration=1)
+    # mouse.move(0,0, duration=1)
     # window_manager.mouse_to_enemy()
 
-    card_pos_order = [0, 0, 0, 0, 0]
-    for i in range(5):
-        print(stat_manager.hand_size.value)
-        window_manager.play_card(card_pos_order[i], stat_manager)
-        stat_manager.add_hand_size(-1)
+    # card_pos_order = [0, 0, 0, 0, 0]
+    # for i in range(5):
+    #     print(stat_manager.hand_size.value)
+    #     window_manager.play_card(card_pos_order[i], stat_manager)
+    #     stat_manager.add_hand_size(-1)
 
     # for card in hand_to_cards(window_manager, stat_manager):
     #     print(card)
 
-    # scroll_and_gen(window_manager, stat_manager)
+    clear_temp()
+    mouse.move(0,0)
+    scroll_and_gen(window_manager, stat_manager)
 
     # for card_name, card_dict in IMPORTANT_CARDS.items():
     #     print(card_portrait_to_card(open(card_dict[CardDataTypes.PORTRAIT_PATH]), 1))
