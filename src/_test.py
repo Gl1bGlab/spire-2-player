@@ -15,7 +15,7 @@ from __file_manager import *
 def main():
     window_manager = GameWindowHandler()
     stat_manager = GameStatHandler()
-    stat_manager.set_hand_size(5)
+    stat_manager.set_hand_size(2)
     from PIL.Image import open
     curr_state = GameState.UNOPENED
 
