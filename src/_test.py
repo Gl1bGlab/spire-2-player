@@ -47,8 +47,8 @@ def main():
 
 """
 TODO: 
-- find location of enemy via health bar.
-- play card on enemy.
+- keep trucking
+- ensure a card knows how much energy it's giving/taking
 
 - relic logic
 - special card logic

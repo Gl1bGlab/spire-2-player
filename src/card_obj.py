@@ -4,7 +4,7 @@ from os.path import join
 from PIL.Image import Image, open
 from PIL import ImageChops
 
-from constants.game_constants import CARDS, CardDataTypes, SpecialTypes, CardTypes
+from constants.game_constants import CARDS, CardDataTypes, SpecialTypes, PlayTypes
 from constants.project_constants import CARD_PORTRAIT_PATH, ACCEPTABLE_IMAGE_DIFF
 # from game_window_handler import GameWindowHandler
 # from game_stat_handler import GameStatHandler

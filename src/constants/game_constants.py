@@ -31,56 +31,233 @@ class CardTypes(Enum):
     CURSE = "curse"
 
 class SpecialTypes(Enum):
-    VARIABLE_DRAW = "variable draw"
+    DRAW_DIFF = "variable draw"
     CONSTANT_DRAW = "constant draw"
+    DISCARD_OTHER_THAN_ONE = "discard != 1"
     SEARCH_AND_ADD = "search and add"
     SELECT_AND_EXHAUST = "select and exhaust"
     UNIQUE = "unique"
+    AVOID = "AVOID"
+    STATUS_TO_DISCARD = "add status to discard"
 
 class CardDataTypes(Enum):
     PORTRAIT_PATH = "path"
     ENERGY_COST = "cost"
     SPECIAL = "special"
     DRAW_DIFF = "draw diff"
+    DISCARD_DIFF = "discard diff"
     TYPE = "type"
     PLAY_TYPE = "play type"
+    CREATED_STATUSES = "created status"
+    KEYWORDS = "keywords"
 
 class PlayTypes(Enum):
     TARGET_ENEMY = "target enemy"
     NO_TARGET = "no target"
 
+class CardKeywords(Enum):
+    ETHEREAL = "ethereal"
+    EXHAUST = "exhaust"
+    UNPLAYABLE = "unplayable"
+
 CARDS: dict[CardDataTypes] = {
+    "Adaptive Strike": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Adaptive_Strike.png"),
+        CardDataTypes.ENERGY_COST: 2,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
+
+        CardDataTypes.SPECIAL: SpecialTypes.DISCARD_OTHER_THAN_ONE,
+        CardDataTypes.DISCARD_DIFF: 2,
+    },
+    "All for One": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_All_for_One.png"),
+        CardDataTypes.SPECIAL: SpecialTypes.AVOID
+    },
+    "Ball Lightning": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Ball_Lightning.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
+    },
+    "Barrage": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Barrage.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
+    },
+    "Beam Cell": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Beam_Cell.png"),
+        CardDataTypes.ENERGY_COST: 0,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
+    },
+    "Boost Away": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Boost_Away.png"),
+        CardDataTypes.ENERGY_COST: 0,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.SPECIAL: SpecialTypes.STATUS_TO_DISCARD,
+        CardDataTypes.DISCARD_DIFF: 2,
+        CardDataTypes.CREATED_STATUSES: ["Dazed"],
+    },
+    "Boot Sequence": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Boot_Sequence.png"),
+        CardDataTypes.ENERGY_COST: 0,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.KEYWORDS: [CardKeywords.EXHAUST],
+    },
+    "Buffer": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Buffer.png"),
+        CardDataTypes.ENERGY_COST: 2,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.TYPE: CardTypes.POWER,
+    },
+    "Bulk Up": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Bulk_Up.png"),
+        CardDataTypes.ENERGY_COST: 2,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.TYPE: CardTypes.POWER,
+    },
+    "Capacitor": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Capacitor.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.TYPE: CardTypes.POWER,
+    },
+    "Chaos": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Chaos.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+    },
+    "Charge Battery": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Charge_Battery.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+    },
+    "Chill": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Chill.png"),
+        CardDataTypes.ENERGY_COST: 0,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.KEYWORDS: [CardKeywords.EXHAUST],
+    },
+    "Claw": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Claw.png"),
+        CardDataTypes.ENERGY_COST: 0,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
+    },
+    "Clumsy": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Clumsy.png"),
+        CardDataTypes.ENERGY_COST: 0,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.KEYWORDS: [CardKeywords.UNPLAYABLE, CardKeywords.ETHEREAL],
+    },
+    "Cold Snap": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Cold_Snap.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
+    },
+    "Compact": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Compact.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.SPECIAL: SpecialTypes.UNIQUE,
+    },
     "Compile Driver": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Compile_Driver.png"),
         CardDataTypes.ENERGY_COST: 1,
-        CardDataTypes.TYPE: CardTypes.ATTACK,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
 
-        CardDataTypes.SPECIAL: SpecialTypes.VARIABLE_DRAW,
+        CardDataTypes.SPECIAL: SpecialTypes.DRAW_DIFF,
+    },
+    "Consuming Shadow": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Consuming_Shadow.png"),
+        CardDataTypes.ENERGY_COST: 2,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.TYPE: CardTypes.POWER,
     },
     "Coolheaded":{
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Coolheaded.png"),
         CardDataTypes.ENERGY_COST: 1,
-        CardDataTypes.TYPE: CardTypes.SKILL,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 1,
     },
+    "Creative AI": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Creative_AI.png"),
+        CardDataTypes.ENERGY_COST: 2,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.TYPE: CardTypes.POWER,
+    },
+    "Darkness": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Darkness.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+    },
+    "Dazed": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Dazed.png"),
+        CardDataTypes.ENERGY_COST: 0,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.TYPE: CardTypes.STATUS,
+        CardDataTypes.KEYWORDS: [CardKeywords.UNPLAYABLE, CardKeywords.ETHEREAL]
+    },
+    "Defend": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Defend.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+    },
+    "Defragment": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Defragment.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.TYPE: CardTypes.POWER,
+    },
     "Feral": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Feral.png"),
         CardDataTypes.ENERGY_COST: 2,
-        CardDataTypes.TYPE: CardTypes.ATTACK,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
+
+        CardDataTypes.SPECIAL: SpecialTypes.AVOID
+    },
+    "Fight Through": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Fight_Through.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.SPECIAL: SpecialTypes.STATUS_TO_DISCARD,
+        CardDataTypes.CREATED_STATUSES: ["Wound", "Wound"],
+    },
+    "Focused Strike": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Focused_Strike.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
     },
     "FTL": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_FTL.png"),
         CardDataTypes.ENERGY_COST: 0,
-        CardDataTypes.TYPE: CardTypes.ATTACK,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
 
-        CardDataTypes.SPECIAL: SpecialTypes.VARIABLE_DRAW,
+        CardDataTypes.SPECIAL: SpecialTypes.DRAW_DIFF,
+    },
+    "Fuel": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Fuel.png"),
+        CardDataTypes.ENERGY_COST: 0,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        
     },
     "Hologram": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Hologram.png"),
         CardDataTypes.ENERGY_COST: 1,
-        CardDataTypes.TYPE: CardTypes.SKILL,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
 
         CardDataTypes.SPECIAL: SpecialTypes.SEARCH_AND_ADD,
         CardDataTypes.DRAW_DIFF: 1,
@@ -88,12 +265,12 @@ CARDS: dict[CardDataTypes] = {
     "Iteration": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Iteration.png"),
         CardDataTypes.ENERGY_COST: 1,
-        CardDataTypes.TYPE: CardTypes.POWER,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
     },
     "Neow's Fury": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Neows_Fury.png"),
         CardDataTypes.ENERGY_COST: 1,
-        CardDataTypes.TYPE: CardTypes.ATTACK,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 2,
@@ -101,7 +278,7 @@ CARDS: dict[CardDataTypes] = {
     "Overclock": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Overclock.png"),
         CardDataTypes.ENERGY_COST: 0,
-        CardDataTypes.TYPE: CardTypes.SKILL,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 2,
@@ -109,7 +286,7 @@ CARDS: dict[CardDataTypes] = {
     "Rocket Punch": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Rocket_Punch.png"),
         CardDataTypes.ENERGY_COST: 2,
-        CardDataTypes.TYPE: CardTypes.ATTACK,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 1,
@@ -117,7 +294,7 @@ CARDS: dict[CardDataTypes] = {
     "Scavenge": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Scavenge.png"),
         CardDataTypes.ENERGY_COST: 1,
-        CardDataTypes.TYPE: CardTypes.SKILL,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
 
         CardDataTypes.SPECIAL: SpecialTypes.SELECT_AND_EXHAUST,
         CardDataTypes.DRAW_DIFF: -1,
@@ -125,14 +302,14 @@ CARDS: dict[CardDataTypes] = {
     "Scrape": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Scrape.png"),
         CardDataTypes.ENERGY_COST: 1,
-        CardDataTypes.TYPE: CardTypes.ATTACK,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
 
-        CardDataTypes.SPECIAL: SpecialTypes.VARIABLE_DRAW,
+        CardDataTypes.SPECIAL: SpecialTypes.DRAW_DIFF,
     },
     "Skim": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Skim.png"),
         CardDataTypes.ENERGY_COST: 1,
-        CardDataTypes.TYPE: CardTypes.SKILL,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 3,
@@ -140,7 +317,7 @@ CARDS: dict[CardDataTypes] = {
     "Slimed": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Slimed.png"),
         CardDataTypes.ENERGY_COST: 1,
-        CardDataTypes.TYPE: CardTypes.STATUS,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 1,
@@ -148,7 +325,7 @@ CARDS: dict[CardDataTypes] = {
     "Sweeping Beam": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Sweeping_Beam.png"),
         CardDataTypes.ENERGY_COST: 1,
-        CardDataTypes.TYPE: CardTypes.ATTACK,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 1,
@@ -156,14 +333,14 @@ CARDS: dict[CardDataTypes] = {
     "Uproar": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Uproar.png"),
         CardDataTypes.ENERGY_COST: 1,
-        CardDataTypes.TYPE: CardTypes.ATTACK,
+        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
 
-        CardDataTypes.SPECIAL: SpecialTypes.VARIABLE_DRAW,
+        CardDataTypes.SPECIAL: SpecialTypes.DRAW_DIFF,
     },
     "White Noise": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_White_Noise.png"),
         CardDataTypes.ENERGY_COST: 1,
-        CardDataTypes.TYPE: CardTypes.SKILL,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
 
         CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
         CardDataTypes.DRAW_DIFF: 1,
