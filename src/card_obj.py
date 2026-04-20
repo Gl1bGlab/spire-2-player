@@ -51,7 +51,7 @@ def card_portrait_to_card(new_card_portrait: Image, card_position: int)->Card|Sp
         if image_diff <= ACCEPTABLE_IMAGE_DIFF:
             energy_cost = card_data[CardDataTypes.ENERGY_COST]
             special_type = card_data[CardDataTypes.SPECIAL] if CardDataTypes.SPECIAL in card_data else None
-            draw_diff = card_data[CardDataTypes.DRAW_DIFF] if CardDataTypes.DRAW_DIFF in card_data else None
+            draw_diff = card_data[CardDataTypes.CARDS_ADDED_TO_HAND] if CardDataTypes.CARDS_ADDED_TO_HAND in card_data else None
             return SpecialCard(card_position, card_name, energy_cost, draw_diff, special_type)
     return Card(card_position)
 
