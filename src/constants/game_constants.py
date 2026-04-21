@@ -33,6 +33,8 @@ class CardTypes(Enum):
 class SpecialTypes(Enum):
     DRAW_DIFF = "variable draw"
     CONSTANT_DRAW = "constant draw"
+    CREATE_CARD = "create card in hand"
+
     STATUS_TO_DISCARD = "add status to discard"
     DISCARD_OTHER_THAN_ONE = "cards to discard != 1"
 
@@ -49,14 +51,18 @@ class SpecialTypes(Enum):
 class CardDataTypes(Enum):
     PORTRAIT_PATH = "path"
     ENERGY_COST = "cost"
+    PLAY_TYPE = "play type"
+
     TOTAL_ENERGY_COST = "energy diff"
-    SPECIAL = "special"
     CARDS_ADDED_TO_HAND = "draw diff"
     DISCARD_DIFF = "discard diff"
-    TYPE = "type"
-    PLAY_TYPE = "play type"
+    DECK_DIFF = "deck diff"
+
     CREATED_STATUSES = "created status"
+
+    TYPE = "type"
     KEYWORDS = "keywords"
+    SPECIAL = "special"
 
 class PlayTypes(Enum):
     TARGET_ENEMY = "target enemy"
@@ -67,7 +73,7 @@ class CardKeywords(Enum):
     EXHAUST = "exhaust"
     UNPLAYABLE = "unplayable"
 
-CARDS: dict[CardDataTypes] = {
+CARDS: dict[dict[CardDataTypes]] = {
     "Adaptive Strike": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Adaptive_Strike.png"),
         CardDataTypes.ENERGY_COST: 2,
@@ -78,6 +84,9 @@ CARDS: dict[CardDataTypes] = {
     },
     "All for One": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_All_for_One.png"),
+        CardDataTypes.ENERGY_COST: 2,
+        CardDataTypes.PLAY_TYPE: PlayTypes. TARGET_ENEMY,
+
         CardDataTypes.SPECIAL: SpecialTypes.AVOID
     },
     "Ball Lightning": {
@@ -551,14 +560,14 @@ CARDS: dict[CardDataTypes] = {
     "Thunder": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Thunder.png"),
         CardDataTypes.ENERGY_COST: 0,
-        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
 
         CardDataTypes.TYPE: CardTypes.POWER
     },
     "TURBO": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_TURBO.png"),
         CardDataTypes.ENERGY_COST: 0,
-        CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
 
         CardDataTypes.TYPE: CardTypes.POWER
     },
@@ -567,15 +576,28 @@ CARDS: dict[CardDataTypes] = {
         CardDataTypes.ENERGY_COST: 1,
         CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
 
-        CardDataTypes.SPECIAL: SpecialTypes.DRAW_DIFF,
+        CardDataTypes.SPECIAL: SpecialTypes.AVOID,
     },
     "White Noise": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_White_Noise.png"),
         CardDataTypes.ENERGY_COST: 1,
         CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
 
-        CardDataTypes.SPECIAL: SpecialTypes.CONSTANT_DRAW,
+        CardDataTypes.SPECIAL: SpecialTypes.CREATE_CARD,
         CardDataTypes.CARDS_ADDED_TO_HAND: 1,
+    },
+    "Wound": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Wound.png"),
+        CardDataTypes.ENERGY_COST: 0,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.TYPE: CardTypes.STATUS,
+        CardDataTypes.KEYWORDS: [CardKeywords.UNPLAYABLE]
+    },
+    "Zap": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Zap.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
     },
 }
 

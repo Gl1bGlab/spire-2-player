@@ -4,7 +4,7 @@ from PIL.Image import Image
 from constants.project_constants import (GameState, BOTTOM_FACTOR_CONST,
 ACCEPTABLE_IMAGE_DIFF, HAND_SIZE_PARAMETERS, HandSizeParameterTypes, HandSizes)
 from constants.game_constants import DrawRelics, CARDS, CardDataTypes
-from card_obj import Card, SpecialCard
+from card_obj import Card, Card
 
 class GameStatHandler():
     def __init__(self):
@@ -12,7 +12,7 @@ class GameStatHandler():
         self.draw_relics: list[DrawRelics] = []
 
         self.hand_size: HandSizes = HandSizes.FIVE
-        self.hand: list[Card|SpecialCard]|None = None
+        self.hand: list[Card|Card]|None = None
         self.curr_turn: int = 0
 
     def set_hand_size(self, size)->None:
@@ -64,43 +64,7 @@ class GameStatHandler():
 
         return (base + first_card_factor + index_factor, 0, 0, BOTTOM_FACTOR_CONST)
 
-        # match self.hand_size_category:
-        #     case HandSizeCategories.ZERO:
-        #         raise Exception("Tried to take image of 0 size hand")
-            
-        #     case HandSizeCategories.LOW:
-        #         low_base = .33
-        #         first_card_factor = -(self.hand_size - 5) * .05
-        #         i_factor = i * .09
-
-        #         return (low_base + i_factor + first_card_factor, 0, 0, .05)
-            
-        #     case HandSizeCategories.SIX:
-        #         six_base = .27
-        #         i_factor = i * .096
-        #         return (six_base + i_factor, 0, 0, .05)
-            
-        #     case HandSizeCategories.SEVEN:
-        #         seven_base = .22
-        #         i_factor = i * .095
-        #         return (seven_base + i_factor, 0, 0, .05)
-            
-        #     case HandSizeCategories.EIGHT:
-        #         eight_base = .2
-        #         i_factor = i * .085
-        #         return (eight_base + i_factor, 0, 0, .05)
-
-        #     case HandSizeCategories.NINE:
-        #         nine_base = .18
-        #         i_factor = i * .08
-        #         return (nine_base + i_factor, 0, 0, .05)            
-
-        #     case HandSizeCategories.TEN:
-        #         ten_base = .17
-        #         i_factor = i * .075
-        #         return (ten_base + i_factor, 0, 0, .05)
-
-    def card_portrait_to_card(self, new_card_portrait: Image, card_position: int)->Card|SpecialCard:
+    def card_portrait_to_card(self, new_card_portrait: Image, card_position: int)->Card|Card:
         for card_name, card_data in CARDS.items():
             curr_portrait = open(card_data[CardDataTypes.PORTRAIT_PATH])
             image_diff = self.count_color(ImageChops.difference(new_card_portrait, curr_portrait))
@@ -109,10 +73,10 @@ class GameStatHandler():
                 energy_cost = card_data[CardDataTypes.ENERGY_COST]
                 special_type = card_data[CardDataTypes.SPECIAL] if CardDataTypes.SPECIAL in card_data else None
                 draw_diff = card_data[CardDataTypes.CARDS_ADDED_TO_HAND] if CardDataTypes.CARDS_ADDED_TO_HAND in card_data else None
-                return SpecialCard(card_position, card_name, energy_cost, draw_diff, special_type)
+                return Card(card_position, card_name, energy_cost, draw_diff, special_type)
         return Card(card_position)
 
-    def hand_to_cards(self, window_handler)->list[Card|SpecialCard]:
+    def hand_to_cards(self, window_handler)->list[Card|Card]:
         from game_window_handler import GameWindowHandler
         cards: list[Card|None] = []
         for i, portrait in enumerate(window_handler.scroll_hand(self)):

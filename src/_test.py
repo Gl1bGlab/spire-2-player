@@ -15,9 +15,10 @@ from __file_manager import *
 def main():
     window_manager = GameWindowHandler()
     stat_manager = GameStatHandler()
-    stat_manager.set_hand_size(2)
+    stat_manager.set_hand_size(5)
     from PIL.Image import open
     curr_state = GameState.UNOPENED
+    mouse.move(0,0)
 
     # mouse.move(0,0, duration=1)
     # window_manager.mouse_to_enemy()
@@ -28,12 +29,11 @@ def main():
     #     window_manager.play_card(card_pos_order[i], stat_manager)
     #     stat_manager.add_hand_size(-1)
 
-    # for card in hand_to_cards(window_manager, stat_manager):
-    #     print(card)
+    for card in hand_to_cards(window_manager, stat_manager):
+        print(card)
 
-    clear_temp()
-    mouse.move(0,0)
-    scroll_and_gen(window_manager, stat_manager)
+    # clear_temp()
+    # scroll_and_gen(window_manager, stat_manager)
 
     # for card_name, card_dict in IMPORTANT_CARDS.items():
     #     print(card_portrait_to_card(open(card_dict[CardDataTypes.PORTRAIT_PATH]), 1))
@@ -48,6 +48,7 @@ def main():
 """
 TODO: 
 - keep trucking
+- out with the old...
 - ensure a card knows how much energy it's giving/taking
 
 - relic logic
