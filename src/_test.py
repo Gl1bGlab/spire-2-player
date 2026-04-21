@@ -12,26 +12,28 @@ from card_helpers import card_portrait_to_card
 from __file_manager import *
 
 def main():
+    from PIL.Image import open
     stat_manager = StatHandler()
     window_manager = WindowHandler()
     fight_manager = FightHandler(stat_manager, window_manager)
-    fight_manager.set_hand_size(5)
-    from PIL.Image import open
+    fight_manager.set_hand_size(4)
     curr_state = GameState.UNOPENED
     mouse.move(0,0)
 
     # mouse.move(0,0, duration=1)
     # window_manager.mouse_to_enemy()
 
-    # card_pos_order = [0, 0, 0, 0, 0]
-    # for i in range(5):
-    #     print(stat_manager.hand_size.value)
-    #     window_manager.play_card(card_pos_order[i], stat_manager)
-    #     stat_manager.add_hand_size(-1)
-
     fight_manager.hand_to_cards()
-    for card in fight_manager._curr_hand:
-        print(card)
+    for i in range(fight_manager._curr_hand_size.value):
+        print(fight_manager._curr_hand_size.value)
+        fight_manager.play_card_data(fight_manager._curr_hand[0])
+
+    print(fight_manager)
+    # print(fight_manager.window_handler)
+    # print(fight_manager.stat_handler)
+    # fight_manager.hand_to_cards()
+    # for card in fight_manager._curr_hand:
+    #     print(card)
 
     # clear_temp()
     # scroll_and_gen(window_manager, stat_manager)
@@ -48,9 +50,8 @@ def main():
 
 """
 TODO: 
-- keep trucking
-- out with the old...
-- ensure a card knows how much energy it's giving/taking
+- card playing logic
+(i'm going to die edition)
 
 - relic logic
 - special card logic

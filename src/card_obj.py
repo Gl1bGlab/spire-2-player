@@ -10,14 +10,12 @@ class Card():
             play_type: PlayTypes,
 
             hand_diff: int|None,
-            deck_diff: int|None,
-            discard_diff: int|None,
             total_cost: int|None,
 
             card_type: CardTypes|None,
             special_type: SpecialTypes|None,
-            keywords: list[CardKeywords]|None,
-            cards_to_create: list[Card]|None,
+            keywords: list[CardKeywords]|list,
+            discard_cards_to_create: list[Card]|list,
         ):
         self.name = name
         self.hand_position = hand_position
@@ -25,19 +23,15 @@ class Card():
         self.play_type = play_type
 
         self.hand_diff = hand_diff
-        self.deck_diff = deck_diff
-        self.discard_diff = discard_diff
         self.total_cost = total_cost
 
         self.card_type = card_type
         self.special_type = special_type
         self.keywords = keywords
-        self.created_cards = cards_to_create
+        self.discard_cards_to_create = discard_cards_to_create
 
-    def energy_calculation_pre_play(self, curr_energy)->int:
-        if self.cost <= curr_energy:
-            return curr_energy - self.cost
-        return None
+    def enough_energy_check(self, curr_energy)->bool:
+        return self.cost <= curr_energy
 
     def move_hand_pos(self, card: Card):
         if card.hand_position > self.hand_position:

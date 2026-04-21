@@ -6,7 +6,7 @@ from PIL import ImageGrab
 from PIL.Image import Image
 
 from constants.project_constants import ENEMY_HEALTH_CAPTURE_AREA, CARD_CAPTURE_MOUSE_LOCATION, \
-MOUSE_MOVE_TIME, CARD_PORTRAIT_CAPTURE_AREA, MOUSE_PAUSE_TIME
+MOUSE_MOVE_TIME, CARD_PORTRAIT_CAPTURE_AREA, MOUSE_PAUSE_TIME, GENERIC_CARD_PLAY_LOCATION
 from constants.game_constants import WINDOW_NAME, ENEMY_HEALTH_COLORS
 
 class WindowHandler():
@@ -41,7 +41,7 @@ class WindowHandler():
         msg_printed = False
         while win32gui.GetForegroundWindow() != self.window:
             if not msg_printed:
-                print(f"Waiting for {self.window} to be the foreground window")
+                print(f"Waiting for {hex(self.window)} to be the foreground window")
                 msg_printed = True
             if not win32gui.IsWindow(self.window) or (win32gui.GetWindowText(self.window) != WINDOW_NAME):
                 self.window = None
@@ -119,8 +119,6 @@ class WindowHandler():
         l, x, x, b = factors
         mouse.move(l, b, duration=delay)
 
-
-
     def move_card_to_capture_site(self, factors: tuple[float, float, float, float]):
         card_capture_factors = self.grab_and_cut_dimensions(CARD_CAPTURE_MOUSE_LOCATION)
 
@@ -134,8 +132,6 @@ class WindowHandler():
         card_dimensions = self.grab_and_cut_dimensions(window_factors)
         card_image = ImageGrab.grab().crop(card_dimensions)
         return card_image
-    
-
 
     def mouse_to_enemy(self):
         self.check_and_grab_game_image()
@@ -150,6 +146,16 @@ class WindowHandler():
         xy_factor = self.find_xy_dimensions(ENEMY_HEALTH_CAPTURE_AREA, xy)
         self.mouse_to_dimension_pos(xy_factor)
 
+    def mouse_to_generic_play_pos(self):
+        self.mouse_to_dimension_pos(GENERIC_CARD_PLAY_LOCATION)
+
+    def __repr__(self):
+        return f"""WindowHandler(
+    window={hex(self.window)},
+    absolute_dimesnions={self.absolute_dimensions},
+    hand_dimensions={self.hand_dimensions},
+    curr_image={self.curr_image},
+)"""
 
 def find_color_rel_xy(img: Image, color: tuple[int, int, int])->tuple[int, int] | None:
     width, height = img.size
