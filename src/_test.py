@@ -5,17 +5,17 @@ from PIL import ImageChops, Image, ImageGrab
 
 from constants.project_constants import GameState, CARD_PORTRAIT_PATH, ENEMY_HEALTH_CAPTURE_AREA
 from constants.game_constants import CARDS, CardDataTypes, ENEMY_HEALTH_COLORS
-from game_window_handler import GameWindowHandler
-from game_stat_handler import GameStatHandler
-from card_obj import card_portrait_to_card, hand_to_cards
+from game_window_handler import WindowHandler
+from game_stat_handler import StatHandler
+from fight_handler import FightHandler
+from card_helpers import card_portrait_to_card
 from __file_manager import *
 
-
-
 def main():
-    window_manager = GameWindowHandler()
-    stat_manager = GameStatHandler()
-    stat_manager.set_hand_size(5)
+    stat_manager = StatHandler()
+    window_manager = WindowHandler()
+    fight_manager = FightHandler(stat_manager, window_manager)
+    fight_manager.set_hand_size(5)
     from PIL.Image import open
     curr_state = GameState.UNOPENED
     mouse.move(0,0)
@@ -29,7 +29,8 @@ def main():
     #     window_manager.play_card(card_pos_order[i], stat_manager)
     #     stat_manager.add_hand_size(-1)
 
-    for card in hand_to_cards(window_manager, stat_manager):
+    fight_manager.hand_to_cards()
+    for card in fight_manager._curr_hand:
         print(card)
 
     # clear_temp()

@@ -1,18 +1,15 @@
-from typing import Callable
 from time import sleep
-from math import floor
 
 import mouse
 from win32 import win32gui
 from PIL import ImageGrab
 from PIL.Image import Image
 
-from game_stat_handler import GameStatHandler
 from constants.project_constants import ENEMY_HEALTH_CAPTURE_AREA, CARD_CAPTURE_MOUSE_LOCATION, \
-                                        MOUSE_MOVE_TIME, CARD_PORTRAIT_CAPTURE_AREA, MOUSE_PAUSE_TIME
+MOUSE_MOVE_TIME, CARD_PORTRAIT_CAPTURE_AREA, MOUSE_PAUSE_TIME
 from constants.game_constants import WINDOW_NAME, ENEMY_HEALTH_COLORS
 
-class GameWindowHandler():
+class WindowHandler():
     def __init__(self):
         self.window: int|None = None
         self.absolute_dimensions: tuple[float, float, float, float]|None = None
@@ -122,18 +119,7 @@ class GameWindowHandler():
         l, x, x, b = factors
         mouse.move(l, b, duration=delay)
 
-    def scroll_hand(self, game_stat_handler: GameStatHandler)->list[Image]:
-        hand_size = game_stat_handler.hand_size.value
-        
-        images = []
-        for i in range(hand_size):
-            factors = self.grab_and_cut_dimensions(game_stat_handler.get_hand_size_factor(i))
 
-            self.move_card_to_capture_site(factors)
-            images.append(self.grab_and_cut_window_image(CARD_PORTRAIT_CAPTURE_AREA))
-            mouse.right_click()
-            sleep(MOUSE_PAUSE_TIME)
-        return images
 
     def move_card_to_capture_site(self, factors: tuple[float, float, float, float]):
         card_capture_factors = self.grab_and_cut_dimensions(CARD_CAPTURE_MOUSE_LOCATION)
@@ -149,13 +135,7 @@ class GameWindowHandler():
         card_image = ImageGrab.grab().crop(card_dimensions)
         return card_image
     
-    def play_card(self, hand_pos: int, game_stat_handler: GameStatHandler)->None:
-        factors = self.grab_and_cut_dimensions(game_stat_handler.get_hand_size_factor(hand_pos))
-        self.mouse_to_dimension_pos(factors, delay=0)
-        sleep(MOUSE_PAUSE_TIME)
-        mouse.press()
-        self.mouse_to_enemy()
-        mouse.release()
+
 
     def mouse_to_enemy(self):
         self.check_and_grab_game_image()

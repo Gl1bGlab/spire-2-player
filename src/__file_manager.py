@@ -6,10 +6,10 @@ from uuid import uuid4
 from PIL.Image import Image
 
 from constants.project_constants import CARD_PORTRAIT_PATH
-from game_window_handler import GameWindowHandler
-from game_stat_handler import GameStatHandler
+from game_window_handler import WindowHandler
+from game_stat_handler import StatHandler
 
-def scroll_and_gen(window_handler: GameWindowHandler, stat_handler: GameStatHandler):
+def scroll_and_gen(window_handler: WindowHandler, stat_handler: StatHandler):
     portraits = window_handler.scroll_hand(stat_handler)
     for portrait in portraits:
         gen_image_file(portrait)

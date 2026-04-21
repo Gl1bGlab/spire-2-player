@@ -13,7 +13,13 @@ class GameState(Enum):
     UNOPENED = "unopened"
     INIT = "init"
     CHAR_SELECT = "char_select"
-    
+
+class FightState(Enum):
+    PLAY_TURN = "play turn"
+    END_TURN = "end turn"
+    ENEMY_TURN = "enemy turn"
+    FIGHT_END = "fight end"
+
 # Hand sizes greater than 5 squish the cards closer per
 # card added. This creates the need for specific calculations
 # depending on how close the cards are with larger hands.
