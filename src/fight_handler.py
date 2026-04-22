@@ -18,7 +18,7 @@ class FightHandler():
     def __init__(self, stat_handler: StatHandler, window_handler: WindowHandler):
         self.stat_handler = stat_handler
         self.window_handler = window_handler
-        self._draw_relics: list[DrawRelics]|None = stat_handler._draw_relics
+        self._draw_relics: list[DrawRelics]|list = stat_handler.draw_relics
 
         self._curr_deck_size: int = stat_handler._deck_size
         self._curr_discard_size: int = 0
@@ -28,9 +28,12 @@ class FightHandler():
 
         self._curr_hand: list[Card]|None = None
         self._curr_hand_size: HandSizes = HandSizes.FIVE
-        self._curr_energy: int = 3
+        self._curr_energy: int = self.set_energy(stat_handler.starting_energy)
 
         self._tracked_cards: dict = {}
+
+    def set_energy(self, energy: int):
+        self._curr_energy = energy
 
     def hand_to_cards(self)->list[Card]:
         cards: list[Card] = []
@@ -102,10 +105,8 @@ class FightHandler():
         return images
 
     def mouse_to_play_position(self, card: Card):
-        if card.play_type == PlayTypes.TARGET_ENEMY:
-            self.window_handler.mouse_to_enemy()
-        else:
-            self.window_handler.mouse_to_generic_play_pos() 
+        if card.play_type == PlayTypes.TARGET_ENEMY: self.window_handler.mouse_to_enemy()
+        else: self.window_handler.mouse_to_generic_play_pos() 
 
     def play_card(self, card: Card)->None:
         factors = self.window_handler.grab_and_cut_dimensions(self.get_hand_size_factor(card.hand_position - 1))
@@ -115,9 +116,28 @@ class FightHandler():
         self.mouse_to_play_position(card)
         mouse.release()
 
-    def start_turn(self):
+    def play_turn(self):
+        mouse.move(0, 0)
         self._curr_turn += 1
         self._curr_hand = self.hand_to_cards()
+        while self._curr_hand != []:
+            self.play_card_data(self._curr_hand[0])
+        self._curr_state = FightState.END_TURN
+        self.change_state()
+
+    def end_turn(self):
+        self.window_handler.mouse_to_end_turn()
+        mouse.click()
+        sleep(5)
+        self._curr_state = FightState.PLAY_TURN
+        self.change_state()
+
+    def change_state(self):
+        match self._curr_state:
+            case FightState.PLAY_TURN:
+                self.play_turn()
+            case FightState.END_TURN:
+                self.end_turn()
 
     def can_be_played_check(self, card: Card)->bool:
         enough_energy = card.enough_energy_check(self._curr_energy)
@@ -131,26 +151,28 @@ class FightHandler():
                 self.draw_cards(card.hand_diff)
                 return
             case SpecialTypes.CREATE_CARD_DISCARD:
-                self.add_cards_to_discard()
+                self.add_cards_to_discard(card.get_discard_num())
                 return
             
             case SpecialTypes.SELECT_AND_EXHAUST:
+                raise NotImplementedError("select and exhaust not implemented")
                 self.select_from_hand()
                 return
             case SpecialTypes.SEARCH_AND_ADD:
+                raise NotImplementedError("search and add not implemented")
                 self.search_and_add()
                 return
             
             case SpecialTypes.ENERGY_GAIN:
-                self.gain_energy()
+                self.gain_energy(card.energy_gain)
                 return
             case SpecialTypes.ENERGY_GAIN_AND_DRAW:
-                self.gain_energy()
-                self.draw_cards()
+                self.gain_energy(card.energy_gain)
+                self.draw_cards(card.hand_diff)
                 return
             case SpecialTypes.ENERGY_GAIN_AND_STATUS:
-                self.gain_energy()
-                self.add_cards_to_discard()
+                self.gain_energy(card.energy_gain)
+                self.add_cards_to_discard(card.get_discard_num())
                 return
             
             case SpecialTypes.TRACK_TIMES_PLAYED:
@@ -160,7 +182,7 @@ class FightHandler():
                 self.handle_unique_card(card)
                 return
             case SpecialTypes.AVOID:
-                raise NotImplementedError("card avoiding logic not made")
+                raise NotImplementedError("card avoiding not implemented")
 
     def create_card(self):
         pass
@@ -201,7 +223,6 @@ class FightHandler():
             self.track_card(card.name)
             self.add_cards_to_discard(-1)
 
-
         self.play_card(card)
         self.add_hand_size(-1)
         self.add_cards_to_discard(1)
@@ -209,15 +230,27 @@ class FightHandler():
         self._curr_hand.remove(card)
         for i in range(self._curr_hand_size.value):
             self._curr_hand[i].move_hand_pos(card)
-
         return True
 
 
     def __repr__(self):
+
+        self._curr_turn: int = 0
+        self._curr_state: FightState = FightState.PLAY_TURN
+
+        self._curr_hand: list[Card]|None = None
+        self._curr_hand_size: HandSizes = HandSizes.FIVE
+        self._curr_energy: int = 3
+
+        self._tracked_cards: dict = {}
         return f"""FightHandler(
     draw_relics={self._draw_relics},
     curr_turn={self._curr_turn},
     curr_state={self._curr_state},
-    curr_hand={self._curr_hand},
+    curr_deck_size={self._curr_deck_size},
+    curr_discard_size={self._curr_discard_size},
+    curr_turn={self._curr_turn},
+    curr_energy={self._curr_energy}
     curr_hand_size={self._curr_hand_size},
+    curr_hand=\n{self._curr_hand},
 )"""

@@ -145,6 +145,8 @@ CARDS: dict[dict[CardDataTypes]] = {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Charge_Battery.png"),
         CardDataTypes.ENERGY_COST: 1,
         CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.SPECIAL: SpecialTypes.UNIQUE,
     },
     "Chill": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Chill.png"),

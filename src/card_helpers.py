@@ -21,7 +21,7 @@ def build_card(hand_position: int, card_name: str, card_data: dict[CardDataTypes
     play_type = card_data[CardDataTypes.PLAY_TYPE]
 
     hand_diff = card_data[CardDataTypes.CARDS_ADDED_TO_HAND] if CardDataTypes.CARDS_ADDED_TO_HAND in card_data else None
-    total_energy_cost = card_data[CardDataTypes.ENERGY_GAIN] if CardDataTypes.ENERGY_GAIN in card_data else None
+    energy_gain = card_data[CardDataTypes.ENERGY_GAIN] if CardDataTypes.ENERGY_GAIN in card_data else None
 
     created_discard_cards = card_data[CardDataTypes.CREATED_DISCARD_CARDS] if CardDataTypes.CREATED_DISCARD_CARDS in card_data else []
     keywords = card_data[CardDataTypes.KEYWORDS] if CardDataTypes.KEYWORDS in card_data else []
@@ -35,7 +35,7 @@ def build_card(hand_position: int, card_name: str, card_data: dict[CardDataTypes
         energy_cost, 
         play_type, 
         hand_diff, 
-        total_energy_cost, 
+        energy_gain, 
         card_type, 
         special_type, 
         keywords, 

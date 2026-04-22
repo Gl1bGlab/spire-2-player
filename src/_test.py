@@ -3,7 +3,7 @@ import os
 import mouse
 from PIL import ImageChops, Image, ImageGrab
 
-from constants.project_constants import GameState, CARD_PORTRAIT_PATH, ENEMY_HEALTH_CAPTURE_AREA
+from constants.project_constants import CARD_PORTRAIT_PATH, ENEMY_HEALTH_CAPTURE_AREA
 from constants.game_constants import CARDS, CardDataTypes, ENEMY_HEALTH_COLORS
 from game_window_handler import WindowHandler
 from game_stat_handler import StatHandler
@@ -16,19 +16,21 @@ def main():
     stat_manager = StatHandler()
     window_manager = WindowHandler()
     fight_manager = FightHandler(stat_manager, window_manager)
-    fight_manager.set_hand_size(4)
-    curr_state = GameState.UNOPENED
-    mouse.move(0,0)
+    fight_manager.set_hand_size(5)
+
+    window_manager.mouse_to_end_turn()
+    #mouse.move(0,0)
+
 
     # mouse.move(0,0, duration=1)
     # window_manager.mouse_to_enemy()
 
-    fight_manager.hand_to_cards()
-    for i in range(fight_manager._curr_hand_size.value):
-        print(fight_manager._curr_hand_size.value)
-        fight_manager.play_card_data(fight_manager._curr_hand[0])
+    # fight_manager.hand_to_cards()
+    # for i in range(fight_manager._curr_hand_size.value):
+    #     print(fight_manager)
+    #     fight_manager.play_card_data(fight_manager._curr_hand[0])
 
-    print(fight_manager)
+    # print(fight_manager)
     # print(fight_manager.window_handler)
     # print(fight_manager.stat_handler)
     # fight_manager.hand_to_cards()
@@ -46,7 +48,6 @@ def main():
     # for image in window_manager.scroll_hand(stat_manager):
     #     gen_image_file(image)
 
-    curr_state = GameState.INIT
 
 """
 TODO: 

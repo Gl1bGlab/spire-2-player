@@ -5,8 +5,9 @@ from win32 import win32gui
 from PIL import ImageGrab
 from PIL.Image import Image
 
-from constants.project_constants import ENEMY_HEALTH_CAPTURE_AREA, CARD_CAPTURE_MOUSE_LOCATION, \
-MOUSE_MOVE_TIME, CARD_PORTRAIT_CAPTURE_AREA, MOUSE_PAUSE_TIME, GENERIC_CARD_PLAY_LOCATION
+from constants.project_constants import ENEMY_HEALTH_CAPTURE_AREA,  \
+MOUSE_MOVE_TIME, MOUSE_PAUSE_TIME, \
+GENERIC_CARD_PLAY_LOCATION, CARD_CAPTURE_MOUSE_LOCATION, END_TURN_BUTTON_LOCATION
 from constants.game_constants import WINDOW_NAME, ENEMY_HEALTH_COLORS
 
 class WindowHandler():
@@ -133,6 +134,7 @@ class WindowHandler():
         card_image = ImageGrab.grab().crop(card_dimensions)
         return card_image
 
+
     def mouse_to_enemy(self):
         self.check_and_grab_game_image()
         image = self.grab_and_cut_window_image(ENEMY_HEALTH_CAPTURE_AREA)
@@ -147,7 +149,12 @@ class WindowHandler():
         self.mouse_to_dimension_pos(xy_factor)
 
     def mouse_to_generic_play_pos(self):
-        self.mouse_to_dimension_pos(GENERIC_CARD_PLAY_LOCATION)
+        dimensions = self.grab_and_cut_dimensions(GENERIC_CARD_PLAY_LOCATION)
+        self.mouse_to_dimension_pos(dimensions)
+
+    def mouse_to_end_turn(self):
+        dimensions = self.grab_and_cut_dimensions(END_TURN_BUTTON_LOCATION)
+        self.mouse_to_dimension_pos(dimensions)
 
     def __repr__(self):
         return f"""WindowHandler(

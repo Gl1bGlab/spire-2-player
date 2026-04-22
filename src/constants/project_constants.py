@@ -100,8 +100,10 @@ HAND_SIZE_PARAMETERS = {
 # Game screen ratios for moving a card to a specific location
 # and capturing its portriat.
 BOTTOM_FACTOR_CONST = .05
-CARD_CAPTURE_MOUSE_LOCATION = (.1, 0, 0, .03)
-CARD_PORTRAIT_CAPTURE_AREA = (.04, .78, .84, .03)
 
+CARD_PORTRAIT_CAPTURE_AREA = (.04, .78, .84, .03)
 ENEMY_HEALTH_CAPTURE_AREA = (.5, .6, .1, .27)
+
+CARD_CAPTURE_MOUSE_LOCATION = (.1, 0, 0, .03)
 GENERIC_CARD_PLAY_LOCATION = (.5, 0, 0, .5)
+END_TURN_BUTTON_LOCATION = (.9, 0, 0, .17)
