@@ -35,12 +35,20 @@ class Card():
 
     def enough_energy_check(self, curr_energy)->bool:
         return self.cost <= curr_energy
+    
+    def can_be_played_check(self, curr_energy)->bool:
+        enough_energy = self.enough_energy_check(curr_energy)
+        not_unplayable = not CardKeywords.UNPLAYABLE in self.keywords
+        return enough_energy and not_unplayable
+    
+    def gains_energy_check(self)->bool:
+        return self.energy_gain != None
 
     def move_hand_pos(self, card: Card):
         if card.hand_position < self.hand_position:
             self.hand_position -= 1
 
-    def __repr__(self):
+    def __repr__(self)->str:
         repr_str = "Card("
         for key, value in self.__dict__.items():
             if value is not None:

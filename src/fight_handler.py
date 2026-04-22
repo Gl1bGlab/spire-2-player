@@ -20,22 +20,25 @@ class FightHandler():
         self.window_handler = window_handler
         self._draw_relics: list[DrawRelics]|list = stat_handler.draw_relics
 
-        self._curr_deck_size: int = stat_handler._deck_size
+        self._curr_deck_size: int = stat_handler.deck_size
         self._curr_discard_size: int = 0
 
         self._curr_turn: int = 0
         self._curr_state: FightState = FightState.PLAY_TURN
 
         self._curr_hand: list[Card]|None = None
-        self._curr_hand_size: HandSizes = HandSizes.FIVE
-        self._curr_energy: int = self.set_energy(stat_handler.starting_energy)
-
+        self._default_hand_size: int = stat_handler.default_draw
+        self._default_energy: int = stat_handler.default_energy
+        
         self._tracked_cards: dict = {}
+
+        self.set_hand_size(self._default_hand_size)
+        self.set_energy(self._default_energy)
 
     def set_energy(self, energy: int):
         self._curr_energy = energy
 
-    def hand_to_cards(self)->list[Card]:
+    def hand_to_cards(self):
         cards: list[Card] = []
         for i, portrait in enumerate(self.scroll_hand()):
             hand_position = i + 1
@@ -108,7 +111,11 @@ class FightHandler():
         if card.play_type == PlayTypes.TARGET_ENEMY: self.window_handler.mouse_to_enemy()
         else: self.window_handler.mouse_to_generic_play_pos() 
 
-    def play_card(self, card: Card)->None:
+    def start_combat(self):
+        while self._curr_state != FightState.FIGHT_END:
+            self.change_state()
+
+    def play_card(self, card: Card):
         factors = self.window_handler.grab_and_cut_dimensions(self.get_hand_size_factor(card.hand_position - 1))
         self.window_handler.mouse_to_dimension_pos(factors, delay=0)
         sleep(MOUSE_PAUSE_TIME)
@@ -119,16 +126,59 @@ class FightHandler():
     def play_turn(self):
         mouse.move(0, 0)
         self._curr_turn += 1
-        self._curr_hand = self.hand_to_cards()
-        while self._curr_hand != []:
-            self.play_card_data(self._curr_hand[0])
+        self.hand_to_cards()
+        self.play_card_loop()
+
         self._curr_state = FightState.END_TURN
         self.change_state()
 
+    def play_card_loop(self):
+        cards_played_this_loop = []
+        gained_energy_this_loop = False
+        print(self._curr_hand)
+        while True:
+            for card in self._curr_hand:
+                print(f"-------\nCURR: {card}\n-------")
+                if card.can_be_played_check(self._curr_energy):
+                    print("---PLAYABLE---")
+                    self.play_card_data(card)
+                    cards_played_this_loop.append(card)
+                    if card.gains_energy_check():
+                        gained_energy_this_loop = True
+
+            for card in cards_played_this_loop:
+                self._curr_hand.remove(card)
+            cards_played_this_loop = []
+
+            if not gained_energy_this_loop:
+                break
+            gained_energy_this_loop = False
+
+    def play_card_data(self, card: Card):
+        self._curr_energy -= card.cost
+
+        if card.special_type is not None:
+            self.handle_special_card(card)
+
+        if card.card_type == CardTypes.POWER:
+            self.track_card(card.name)
+            self.add_cards_to_discard(-1)
+
+        self.play_card(card)
+        self.add_hand_size(-1)
+        self.add_cards_to_discard(1)
+
+        for i in range(self._curr_hand_size.value):
+            self._curr_hand[i].move_hand_pos(card)
+
     def end_turn(self):
+        self.set_hand_size(self._default_hand_size)
+        self.set_energy(self._default_energy)
+
         self.window_handler.mouse_to_end_turn()
         mouse.click()
-        sleep(5)
+        sleep(6)
+
         self._curr_state = FightState.PLAY_TURN
         self.change_state()
 
@@ -136,13 +186,13 @@ class FightHandler():
         match self._curr_state:
             case FightState.PLAY_TURN:
                 self.play_turn()
+                return
             case FightState.END_TURN:
                 self.end_turn()
+                return
+            case FightState.FIGHT_END:
+                return
 
-    def can_be_played_check(self, card: Card)->bool:
-        enough_energy = card.enough_energy_check(self._curr_energy)
-        not_unplayable = not CardKeywords.UNPLAYABLE in card.keywords
-        return not_unplayable and enough_energy
     
     """TODO!!!!"""
     def handle_special_card(self, card: Card):
@@ -209,28 +259,6 @@ class FightHandler():
 
     def handle_unique_card(self, card: Card):
         pass
-
-    def play_card_data(self, card: Card)->bool:
-        if not self.can_be_played_check(card):
-            return False
-
-        self._curr_energy -= card.cost
-
-        if card.special_type is not None:
-            self.handle_special_card(card)
-
-        if card.card_type == CardTypes.POWER:
-            self.track_card(card.name)
-            self.add_cards_to_discard(-1)
-
-        self.play_card(card)
-        self.add_hand_size(-1)
-        self.add_cards_to_discard(1)
-
-        self._curr_hand.remove(card)
-        for i in range(self._curr_hand_size.value):
-            self._curr_hand[i].move_hand_pos(card)
-        return True
 
 
     def __repr__(self):

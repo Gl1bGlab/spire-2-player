@@ -18,12 +18,7 @@ def main():
     fight_manager = FightHandler(stat_manager, window_manager)
     fight_manager.set_hand_size(5)
 
-    window_manager.mouse_to_end_turn()
-    #mouse.move(0,0)
-
-
-    # mouse.move(0,0, duration=1)
-    # window_manager.mouse_to_enemy()
+    fight_manager.play_turn()
 
     # fight_manager.hand_to_cards()
     # for i in range(fight_manager._curr_hand_size.value):
@@ -39,10 +34,6 @@ def main():
 
     # clear_temp()
     # scroll_and_gen(window_manager, stat_manager)
-
-    # for card_name, card_dict in IMPORTANT_CARDS.items():
-    #     print(card_portrait_to_card(open(card_dict[CardDataTypes.PORTRAIT_PATH]), 1))
-        # open(IMPORTANT_CARDS[card]["path"]).show(card)
 
     # clear_temp()
     # for image in window_manager.scroll_hand(stat_manager):

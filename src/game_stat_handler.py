@@ -8,14 +8,16 @@ from card_obj import Card
 
 class StatHandler():
     def __init__(self):
-        self._game_state: GameState = GameState.INIT
-        self.draw_relics: list[DrawRelics] = []
-        self._deck_size: int = 10
-        self.starting_energy: int = 3
+        self.game_state: GameState = GameState.INIT
+        self.draw_relics: list[DrawRelics]|list = []
+        self.default_draw: int = 5
+        self.deck_size: int = 10
+        self.default_energy: int = 3
 
     def __repr__(self):
         return f"""GameStatHandler(
-    game_state={self._game_state},
+    game_state={self.game_state},
     draw_relics={self.draw_relics},
-    deck_size={self._deck_size}
+    deck_size={self.deck_size},
+    starting_energy={self.default_energy},
 )"""

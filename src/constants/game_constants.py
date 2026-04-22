@@ -233,6 +233,18 @@ CARDS: dict[dict[CardDataTypes]] = {
 
         CardDataTypes.TYPE: CardTypes.POWER,
     },
+    "Double Energy": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Double_Energy.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+
+        CardDataTypes.SPECIAL: SpecialTypes.UNIQUE,
+    },
+    "Dualcast": {
+        CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Dualcast.png"),
+        CardDataTypes.ENERGY_COST: 1,
+        CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
+    },
     "Feral": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Feral.png"),
         CardDataTypes.ENERGY_COST: 2,
