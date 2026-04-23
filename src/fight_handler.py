@@ -108,9 +108,7 @@ class FightHandler():
             sleep(MOUSE_PAUSE_TIME)
         return images
 
-    def mouse_to_play_position(self, card: Card):
-        if card.play_type == PlayTypes.TARGET_ENEMY: self.window_handler.mouse_to_enemy()
-        else: self.window_handler.mouse_to_generic_play_pos() 
+
 
 
     def start_combat(self):
@@ -121,7 +119,7 @@ class FightHandler():
         self.window_handler.mouse_to_dimension_pos(factors, delay=0)
         sleep(MOUSE_PAUSE_TIME)
         mouse.press()
-        self.mouse_to_play_position(card)
+        self.window_handler.mouse_to_play_position(card.play_type.value)
         mouse.release()
 
     def play_turn(self):
@@ -289,22 +287,13 @@ class FightHandler():
 
 
     def __repr__(self):
-
-        self._curr_turn: int = 0
-        self._curr_state: FightState = FightState.PLAY_TURN
-
-        self._curr_hand: list[Card]|None = None
-        self._curr_hand_size: HandSizes = HandSizes.FIVE
-        self._curr_energy: int = 3
-
-        self._tracked_cards: dict = {}
         return f"""FightHandler(
     draw_relics={self._draw_relics},
+    tracked_cards={self._tracked_cards},
     curr_turn={self._curr_turn},
     curr_state={self._curr_state},
     curr_deck_size={self._curr_deck_size},
     curr_discard_size={self._curr_discard_size},
-    curr_turn={self._curr_turn},
     curr_energy={self._curr_energy}
     curr_hand_size={self._curr_hand_size},
     curr_hand=\n{self._curr_hand},

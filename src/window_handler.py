@@ -6,8 +6,10 @@ from PIL import ImageGrab
 from PIL.Image import Image
 
 from constants.project_constants import ENEMY_HEALTH_CAPTURE_AREA,  \
+LOOT_RIBBON_CAPTURE_AREA, \
 MOUSE_MOVE_TIME, MOUSE_PAUSE_TIME, \
 GENERIC_CARD_PLAY_LOCATION, CARD_CAPTURE_MOUSE_LOCATION, END_TURN_BUTTON_LOCATION
+
 from constants.game_constants import WINDOW_NAME, ENEMY_HEALTH_COLORS
 
 class WindowHandler():
@@ -155,8 +157,21 @@ class WindowHandler():
     def mouse_to_end_turn(self):
         dimensions = self.grab_and_cut_dimensions(END_TURN_BUTTON_LOCATION)
         self.mouse_to_dimension_pos(dimensions)
+        
+    def mouse_to_play_position(self, is_targeting_enemy):
+        if is_targeting_enemy: self.mouse_to_enemy()
+        else: self.mouse_to_generic_play_pos()
 
-    def __repr__(self):
+    def is_at_loot_screen(self)->bool:
+        self.check_and_grab_game_image()
+        image = self.grab_and_cut_window_image()
+        xy = find_color_rel_xy(LOOT_RIBBON_CAPTURE_AREA)
+        return xy is not None
+
+    def _show_cut_image(self, factors):
+        self.grab_and_cut_window_image(factors).show()
+
+    def __repr__(self)->str:
         return f"""WindowHandler(
     window={hex(self.window)},
     absolute_dimesnions={self.absolute_dimensions},

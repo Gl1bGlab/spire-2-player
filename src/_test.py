@@ -4,7 +4,8 @@ import mouse
 from PIL import ImageChops, Image, ImageGrab
 from PIL.Image import open
 
-from constants.project_constants import CARD_PORTRAIT_PATH, ENEMY_HEALTH_CAPTURE_AREA
+from constants.project_constants import CARD_PORTRAIT_PATH, ENEMY_HEALTH_CAPTURE_AREA, \
+LOOT_RIBBON_CAPTURE_AREA
 from constants.game_constants import CARDS, CardDataTypes, ENEMY_HEALTH_COLORS
 from window_handler import WindowHandler
 from stat_handler import StatHandler
@@ -18,7 +19,9 @@ def main():
     fight_manager = FightHandler(stat_manager, window_manager)
     # fight_manager.set_hand_size(5)
 
-    fight_manager.play_turn()
+    window_manager.grab_and_cut_window_image(LOOT_RIBBON_CAPTURE_AREA).show()
+    
+    # fight_manager.play_turn()
 
     # fight_manager.hand_to_cards()
     # for i in range(fight_manager._curr_hand_size.value):

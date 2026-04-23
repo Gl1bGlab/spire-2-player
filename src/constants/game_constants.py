@@ -60,8 +60,8 @@ class CardDataTypes(Enum):
     SPECIAL = "special"
 
 class PlayTypes(Enum):
-    TARGET_ENEMY = "target enemy"
-    NO_TARGET = "no target"
+    TARGET_ENEMY = True
+    NO_TARGET = False
 
 class CardKeywords(Enum):
     ETHEREAL = "ethereal"
@@ -622,4 +622,5 @@ CARDS: dict[dict[CardDataTypes]] = {
     },
 }
 
-ENEMY_HEALTH_COLORS: list[tuple] = [(255, 245, 225), (255, 246, 226)]
+ENEMY_HEALTH_COLORS: list[tuple[int, int, int]] = [(255, 245, 225), (255, 246, 226)]
+LOOT_RIBBON_COLOR: tuple[int, int, int] = (164, 142, 117)
