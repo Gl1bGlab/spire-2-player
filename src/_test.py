@@ -2,6 +2,7 @@ import os
 
 import mouse
 from PIL import ImageChops, Image, ImageGrab
+from PIL.Image import open
 
 from constants.project_constants import CARD_PORTRAIT_PATH, ENEMY_HEALTH_CAPTURE_AREA
 from constants.game_constants import CARDS, CardDataTypes, ENEMY_HEALTH_COLORS
@@ -12,11 +13,10 @@ from card_helpers import card_portrait_to_card
 from __file_manager import *
 
 def main():
-    from PIL.Image import open
     stat_manager = StatHandler()
     window_manager = WindowHandler()
     fight_manager = FightHandler(stat_manager, window_manager)
-    fight_manager.set_hand_size(5)
+    # fight_manager.set_hand_size(5)
 
     fight_manager.play_turn()
 
