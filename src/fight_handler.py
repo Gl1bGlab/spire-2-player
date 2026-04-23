@@ -8,11 +8,11 @@ from constants.project_constants import FightState, BOTTOM_FACTOR_CONST, \
 ACCEPTABLE_IMAGE_DIFF, HAND_SIZE_PARAMETERS, HandSizeParameterTypes, HandSizes, \
 CARD_PORTRAIT_CAPTURE_AREA, MOUSE_PAUSE_TIME
 from constants.game_constants import DrawRelics, CARDS, CardDataTypes, PlayTypes, \
-CardKeywords, SpecialTypes, CardTypes
+CardKeywords, SpecialTypes, CardTypes, UniqueCardNames, FUEL_NAME
 from card_obj import Card
-from card_helpers import card_portrait_to_card
-from game_stat_handler import StatHandler
-from game_window_handler import WindowHandler
+from card_helpers import card_portrait_to_card, replace_card
+from stat_handler import StatHandler
+from window_handler import WindowHandler
 
 class FightHandler():
     def __init__(self, stat_handler: StatHandler, window_handler: WindowHandler):
@@ -27,6 +27,7 @@ class FightHandler():
         self._curr_state: FightState = FightState.PLAY_TURN
 
         self._curr_hand: list[Card]|None = None
+        self._cards_played_this_turn: int = 0
         self._default_hand_size: int = stat_handler.default_draw
         self._default_energy: int = stat_handler.default_energy
         
@@ -38,14 +39,7 @@ class FightHandler():
     def set_energy(self, energy: int):
         self._curr_energy = energy
 
-    def hand_to_cards(self):
-        cards: list[Card] = []
-        for i, portrait in enumerate(self.scroll_hand()):
-            hand_position = i + 1
-            cards.append(card_portrait_to_card(portrait, hand_position))
-        self._curr_hand = cards
-    
-    def set_hand_size(self, size)->None:
+    def set_hand_size(self, size: int):
         match (size):
             case 0:
                 self._curr_hand_size = HandSizes.ZERO
@@ -81,7 +75,7 @@ class FightHandler():
                 self._curr_hand_size = HandSizes.TEN
                 return
 
-    def add_hand_size(self, amount: int)->None:
+    def add_hand_size(self, amount: int):
         self.set_hand_size(self._curr_hand_size.value + amount)
 
     def get_hand_size_factor(self, i)->tuple[int, int, int, int]:
@@ -94,10 +88,17 @@ class FightHandler():
 
         return (base + first_card_factor + index_factor, 0, 0, BOTTOM_FACTOR_CONST)
 
+    def hand_to_cards(self):
+        cards: list[Card] = []
+        for i, portrait in enumerate(self.scroll_hand()):
+            hand_position = i + 1
+            cards.append(card_portrait_to_card(portrait, hand_position))
+        self._curr_hand = cards
+
     def scroll_hand(self)->list[Image]:
         hand_size = self._curr_hand_size.value
-        
         images = []
+
         for i in range(hand_size):
             factors = self.window_handler.grab_and_cut_dimensions(self.get_hand_size_factor(i))
 
@@ -111,9 +112,9 @@ class FightHandler():
         if card.play_type == PlayTypes.TARGET_ENEMY: self.window_handler.mouse_to_enemy()
         else: self.window_handler.mouse_to_generic_play_pos() 
 
+
     def start_combat(self):
-        while self._curr_state != FightState.FIGHT_END:
-            self.change_state()
+        self.change_state()
 
     def play_card(self, card: Card):
         factors = self.window_handler.grab_and_cut_dimensions(self.get_hand_size_factor(card.hand_position - 1))
@@ -126,6 +127,7 @@ class FightHandler():
     def play_turn(self):
         mouse.move(0, 0)
         self._curr_turn += 1
+        self._cards_played_this_turn = 0
         self.hand_to_cards()
         self.play_card_loop()
 
@@ -138,10 +140,10 @@ class FightHandler():
         print(self._curr_hand)
         while True:
             for card in self._curr_hand:
-                print(f"-------\nCURR: {card}\n-------")
                 if card.can_be_played_check(self._curr_energy):
-                    print("---PLAYABLE---")
+                    self._cards_played_this_turn += 1
                     self.play_card_data(card)
+
                     cards_played_this_loop.append(card)
                     if card.gains_energy_check():
                         gained_energy_this_loop = True
@@ -225,17 +227,42 @@ class FightHandler():
                 self.add_cards_to_discard(card.get_discard_num())
                 return
             
-            case SpecialTypes.TRACK_TIMES_PLAYED:
-                self.track_card(card.name)
-                return
             case SpecialTypes.UNIQUE:
                 self.handle_unique_card(card)
                 return
             case SpecialTypes.AVOID:
                 raise NotImplementedError("card avoiding not implemented")
 
-    def create_card(self):
-        pass
+    def handle_unique_card(self, card: Card):
+        match card.name:
+            case UniqueCardNames.CHARGE_BATTERY.value:
+                self.track_card(card.name)
+            case UniqueCardNames.COMPACT.value:
+                for i, card in enumerate(self._curr_hand):
+                    if card.card_type == CardTypes.STATUS:
+                        self._curr_hand[i] = replace_card(card, FUEL_NAME)
+            case UniqueCardNames.DOUBLE_ENERGY.value:
+                self.set_energy(self._curr_energy * 2)
+            case UniqueCardNames.FTL.value:
+                if self._cards_played_this_turn < 3:
+                    self.draw_cards(1)
+            case UniqueCardNames.NEOWS_FURY.value:
+                if self._curr_discard_size == 1:
+                    self.draw_cards(1)
+                    self._curr_discard_size -= 1
+                elif self._curr_discard_size >= 2:
+                    self.draw_cards(2)
+                    self._curr_discard_size -= 2
+            case UniqueCardNames.REBOOT.value:
+                self._curr_discard_size = 0
+                self.set_hand_size(4)
+                self.hand_to_cards()
+            case UniqueCardNames.SIGNAL_BOOST.value:
+                self.track_card(card.name)
+            case UniqueCardNames.SYNTHESIS.value:
+                self.track_card(card.name)
+            case _:
+                raise Exception("marked non-unique card as unique")
 
     def select_from_hand(self):
         pass
@@ -244,21 +271,21 @@ class FightHandler():
         pass
 
     def add_cards_to_discard(self, card_num: int):
-        pass
+        self._curr_discard_size += card_num
 
     def draw_cards(self, card_num: int):
-        pass
+        self.set_hand_size(self._curr_hand_size.value + card_num)
+        self.hand_to_cards()
 
     def gain_energy(self, energy: int):
-        pass
+        self._curr_energy += energy
 
     def track_card(self, card_name: str):
         if card_name not in self._tracked_cards:
             self._tracked_cards[card_name] = 0
         self._tracked_cards[card_name] += 1
 
-    def handle_unique_card(self, card: Card):
-        pass
+
 
 
     def __repr__(self):

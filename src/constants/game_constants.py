@@ -42,8 +42,7 @@ class SpecialTypes(Enum):
     ENERGY_GAIN_AND_DRAW = "constant draw + energy gain"
     ENERGY_GAIN_AND_STATUS = "energy gain + create status"
 
-    TRACK_TIMES_PLAYED = "track card played for combat"
-    UNIQUE = "unique"
+    UNIQUE = "unique/track"
     AVOID = "AVOID"
 
 class CardDataTypes(Enum):
@@ -68,6 +67,18 @@ class CardKeywords(Enum):
     ETHEREAL = "ethereal"
     EXHAUST = "exhaust"
     UNPLAYABLE = "unplayable"
+
+class UniqueCardNames(Enum):
+    CHARGE_BATTERY = "Charge Battery"
+    COMPACT = "Compact"
+    DOUBLE_ENERGY = "Double Energy"
+    FTL = "FTL"
+    NEOWS_FURY = "Neow's Fury"
+    REBOOT = "Reboot"
+    SIGNAL_BOOST = "Signal Boost"
+    SYNTHESIS = "Synthesis"
+
+FUEL_NAME = "Fuel"
 
 CARDS: dict[dict[CardDataTypes]] = {
     "Adaptive Strike": {
@@ -272,7 +283,7 @@ CARDS: dict[dict[CardDataTypes]] = {
 
         CardDataTypes.SPECIAL: SpecialTypes.UNIQUE,
     },
-    "Fuel": {
+    FUEL_NAME: {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Fuel.png"),
         CardDataTypes.ENERGY_COST: 0,
         CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
@@ -394,14 +405,14 @@ CARDS: dict[dict[CardDataTypes]] = {
         CardDataTypes.ENERGY_COST: 1,
         CardDataTypes.PLAY_TYPE: PlayTypes.NO_TARGET,
 
-        CardDataTypes.SPECIAL: SpecialTypes.TRACK_TIMES_PLAYED,
+        CardDataTypes.SPECIAL: SpecialTypes.UNIQUE,
     },
     "Momentum Strike": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Momentum_Strike.png"),
         CardDataTypes.ENERGY_COST: 1,
         CardDataTypes.PLAY_TYPE: PlayTypes.TARGET_ENEMY,
 
-        CardDataTypes.SPECIAL: SpecialTypes.TRACK_TIMES_PLAYED,
+        CardDataTypes.SPECIAL: SpecialTypes.UNIQUE,
     },
     "Neow's Fury": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Neows_Fury.png"),

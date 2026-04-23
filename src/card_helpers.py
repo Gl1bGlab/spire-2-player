@@ -42,7 +42,10 @@ def build_card(hand_position: int, card_name: str, card_data: dict[CardDataTypes
         created_discard_cards,
     )
 
-
+def replace_card(card: Card, new_card_name: str)->Card:
+    hand_position = card.hand_position
+    card_data = CARDS[new_card_name]
+    return build_card(hand_position, new_card_name, card_data)
 
 # thx to https://www.geeksforgeeks.org/python/find-most-used-colors-in-image-using-python/
 def count_color(img: Image)->float:

@@ -5,8 +5,8 @@ from PIL import ImageChops, Image, ImageGrab
 
 from constants.project_constants import CARD_PORTRAIT_PATH, ENEMY_HEALTH_CAPTURE_AREA
 from constants.game_constants import CARDS, CardDataTypes, ENEMY_HEALTH_COLORS
-from game_window_handler import WindowHandler
-from game_stat_handler import StatHandler
+from window_handler import WindowHandler
+from stat_handler import StatHandler
 from fight_handler import FightHandler
 from card_helpers import card_portrait_to_card
 from __file_manager import *
