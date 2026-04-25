@@ -624,3 +624,4 @@ CARDS: dict[dict[CardDataTypes]] = {
 
 ENEMY_HEALTH_COLORS: list[tuple[int, int, int]] = [(255, 245, 225), (255, 246, 226)]
 LOOT_RIBBON_COLOR: tuple[int, int, int] = (164, 142, 117)
+LOOT_BUTTONS_COLOR: tuple[int, int, int] = (57, 125, 130)

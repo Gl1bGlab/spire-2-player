@@ -100,7 +100,7 @@ class FightHandler():
         images = []
 
         for i in range(hand_size):
-            factors = self.window_handler.grab_and_cut_dimensions(self.get_hand_size_factor(i))
+            factors = self.window_handler.factors_to_dimensions(self.get_hand_size_factor(i))
 
             self.window_handler.move_card_to_capture_site(factors)
             images.append(self.window_handler.grab_and_cut_window_image(CARD_PORTRAIT_CAPTURE_AREA))
@@ -109,13 +109,11 @@ class FightHandler():
         return images
 
 
-
-
     def start_combat(self):
         self.change_state()
 
     def play_card(self, card: Card):
-        factors = self.window_handler.grab_and_cut_dimensions(self.get_hand_size_factor(card.hand_position - 1))
+        factors = self.window_handler.factors_to_dimensions(self.get_hand_size_factor(card.hand_position - 1))
         self.window_handler.mouse_to_dimension_pos(factors, delay=0)
         sleep(MOUSE_PAUSE_TIME)
         mouse.press()
@@ -126,21 +124,28 @@ class FightHandler():
         mouse.move(0, 0)
         self._curr_turn += 1
         self._cards_played_this_turn = 0
+
         self.hand_to_cards()
         self.play_card_loop()
 
-        self._curr_state = FightState.END_TURN
+        if self._curr_state != FightState.LOOTING:
+            self._curr_state = FightState.END_TURN
+
         self.change_state()
 
     def play_card_loop(self):
         cards_played_this_loop = []
         gained_energy_this_loop = False
-        print(self._curr_hand)
+
         while True:
             for card in self._curr_hand:
                 if card.can_be_played_check(self._curr_energy):
                     self._cards_played_this_turn += 1
                     self.play_card_data(card)
+
+                    if self.is_combat_won():
+                        self._curr_state = FightState.LOOTING
+                        break
 
                     cards_played_this_loop.append(card)
                     if card.gains_energy_check():
@@ -182,6 +187,14 @@ class FightHandler():
         self._curr_state = FightState.PLAY_TURN
         self.change_state()
 
+
+    def is_combat_won(self)->bool:
+        return self.window_handler.is_loot_on_screen()
+
+    """TODO: avoid card logic"""
+    def looting(self):
+        return
+
     def change_state(self):
         match self._curr_state:
             case FightState.PLAY_TURN:
@@ -190,7 +203,11 @@ class FightHandler():
             case FightState.END_TURN:
                 self.end_turn()
                 return
-            case FightState.FIGHT_END:
+            case FightState.LOOTING:
+                return
+            case FightState.FIGHT_FINISHED:
+                return
+            case FightState.DEAD:
                 return
 
     

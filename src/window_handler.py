@@ -5,12 +5,15 @@ from win32 import win32gui
 from PIL import ImageGrab
 from PIL.Image import Image
 
-from constants.project_constants import ENEMY_HEALTH_CAPTURE_AREA,  \
-LOOT_RIBBON_CAPTURE_AREA, \
+from constants.project_constants import WH_SCREEN_RATIO, \
+W_FACTOR, H_FACTOR, \
+ENEMY_HEALTH_CAPTURE_AREA, \
 MOUSE_MOVE_TIME, MOUSE_PAUSE_TIME, \
-GENERIC_CARD_PLAY_LOCATION, CARD_CAPTURE_MOUSE_LOCATION, END_TURN_BUTTON_LOCATION
+GENERIC_CARD_PLAY_LOCATION, CARD_CAPTURE_MOUSE_LOCATION, END_TURN_BUTTON_LOCATION, \
+MOUSE_LOOT_LOCATION
 
-from constants.game_constants import WINDOW_NAME, ENEMY_HEALTH_COLORS
+from constants.game_constants import WINDOW_NAME, ENEMY_HEALTH_COLORS, \
+LOOT_BUTTONS_COLOR
 
 class WindowHandler():
     def __init__(self):
@@ -25,7 +28,10 @@ class WindowHandler():
     def set_window(self):
         win32gui.EnumWindows(self.find_StS2, None)
         if self.window == None:
-            raise Exception(f"{WINDOW_NAME} window not found, please open the game\nIf the game is opened, make sure the name of the window is {WINDOW_NAME}")
+            raise Exception(
+f"""game window not found, please open the game
+If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
+)
     
     # thx to Pedro Lobito from https://stackoverflow.com/questions/55547940/how-to-get-a-list-of-the-name-of-every-open-window
     def find_StS2(self, hwnd:int, ctx):
@@ -56,21 +62,8 @@ class WindowHandler():
         # self.title_bar_offset()
         self.window_size_normalizer()
         self.curr_image = ImageGrab.grab().crop(self.absolute_dimensions)
-
-    def title_bar_offset(self)->None:
-        TITLE_BAR_SIZE = 22
-        l, t, r, b = self.absolute_dimensions
-        t += TITLE_BAR_SIZE
-        l -= TITLE_BAR_SIZE
-        self.absolute_dimensions = l, t, r, b
     
     def window_size_normalizer(self)->None:
-        # calculations to correctly crop the raw image of the screen
-        # to get a clean (enough) image of the game window
-        W_FACTOR = 16
-        H_FACTOR = 9
-        WH_SCREEN_RATIO = .5625
-
         l, t, r, b = self.absolute_dimensions
         w = r - l
         h = b - t
@@ -91,9 +84,9 @@ class WindowHandler():
         self.game_screen_grab()
 
 
-    def grab_and_cut_dimensions(self, 
-                                factors: tuple[float, float, float, float]
-                            )->tuple[float, float, float, float]:
+    def factors_to_dimensions(self, 
+            factors: tuple[float, float, float, float]
+        )->tuple[float, float, float, float]:
         self.check_and_grab_game_image()
         l_factor, t_factor, r_factor, b_factor = factors
         abs_l, abs_t, abs_r, abs_b = self.absolute_dimensions
@@ -103,10 +96,10 @@ class WindowHandler():
         return (abs_l + rel_l, abs_t + rel_t, abs_r + rel_r, abs_b + rel_b)
     
     def find_xy_dimensions(self, 
-                       xy_window_factor: tuple[float, float, float, float], 
-                       xy: tuple[int, int],
-                    )->tuple[float, float, float, float]:
-        xy_window_dimensions = self.grab_and_cut_dimensions(xy_window_factor)
+            xy_window_factor: tuple[float, float, float, float], 
+            xy: tuple[int, int],
+        )->tuple[float, float, float, float]:
+        xy_window_dimensions = self.factors_to_dimensions(xy_window_factor)
         abs_x, x, x, abs_y = xy_window_dimensions
 
         x, y = xy
@@ -116,23 +109,28 @@ class WindowHandler():
 
 
     def mouse_to_dimension_pos(self, 
-                            factors: tuple[float, float, float, float], 
-                            delay=MOUSE_MOVE_TIME
-                        )->None:
-        l, x, x, b = factors
+            dimensions: tuple[float, float, float, float], 
+            delay=MOUSE_MOVE_TIME,
+        ):
+        l, x, x, b = dimensions
         mouse.move(l, b, duration=delay)
 
-    def move_card_to_capture_site(self, factors: tuple[float, float, float, float]):
-        card_capture_factors = self.grab_and_cut_dimensions(CARD_CAPTURE_MOUSE_LOCATION)
+    def mouse_to_factor_pos(self,
+            factors: tuple[float, float, float, float],
+            delay=MOUSE_MOVE_TIME,
+        ):
+        dimensions = self.factors_to_dimensions(factors)
+        self.mouse_to_dimension_pos(dimensions)
 
+    def move_card_to_capture_site(self, factors: tuple[float, float, float, float]):
         self.mouse_to_dimension_pos(factors)
         mouse.click()
 
-        self.mouse_to_dimension_pos(card_capture_factors)
+        self.mouse_to_factor_pos(CARD_CAPTURE_MOUSE_LOCATION)
         sleep(MOUSE_PAUSE_TIME)
 
     def grab_and_cut_window_image(self, window_factors)->Image:
-        card_dimensions = self.grab_and_cut_dimensions(window_factors)
+        card_dimensions = self.factors_to_dimensions(window_factors)
         card_image = ImageGrab.grab().crop(card_dimensions)
         return card_image
 
@@ -151,23 +149,25 @@ class WindowHandler():
         self.mouse_to_dimension_pos(xy_factor)
 
     def mouse_to_generic_play_pos(self):
-        dimensions = self.grab_and_cut_dimensions(GENERIC_CARD_PLAY_LOCATION)
-        self.mouse_to_dimension_pos(dimensions)
+        self.mouse_to_factor_pos(GENERIC_CARD_PLAY_LOCATION)
 
     def mouse_to_end_turn(self):
-        dimensions = self.grab_and_cut_dimensions(END_TURN_BUTTON_LOCATION)
-        self.mouse_to_dimension_pos(dimensions)
+        self.mouse_to_factor_pos(END_TURN_BUTTON_LOCATION)
         
     def mouse_to_play_position(self, is_targeting_enemy):
         if is_targeting_enemy: self.mouse_to_enemy()
         else: self.mouse_to_generic_play_pos()
 
-    def is_at_loot_screen(self)->bool:
-        self.check_and_grab_game_image()
-        image = self.grab_and_cut_window_image()
-        xy = find_color_rel_xy(LOOT_RIBBON_CAPTURE_AREA)
-        return xy is not None
+    def mouse_to_loot(self):
+        self.mouse_to_factor_pos(MOUSE_LOOT_LOCATION)
 
+
+    def is_loot_on_screen(self)->bool:
+        self.check_and_grab_game_image()
+        image = self.grab_and_cut_window_image(MOUSE_LOOT_LOCATION)
+        xy = find_color_rel_xy(image, LOOT_BUTTONS_COLOR)
+        return xy is not None
+    
     def _show_cut_image(self, factors):
         self.grab_and_cut_window_image(factors).show()
 
@@ -187,3 +187,10 @@ def find_color_rel_xy(img: Image, color: tuple[int, int, int])->tuple[int, int] 
             if img.getpixel((x, y)) == color:
                 return x, y
     return None
+
+"method graveyard"
+# def title_bar_offset(self)->None:
+#     l, t, r, b = self.absolute_dimensions
+#     t += TITLE_BAR_SIZE
+#     l -= TITLE_BAR_SIZE
+#     self.absolute_dimensions = l, t, r, b
