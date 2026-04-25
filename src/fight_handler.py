@@ -103,7 +103,7 @@ class FightHandler():
             factors = self.window_handler.factors_to_dimensions(self.get_hand_size_factor(i))
 
             self.window_handler.move_card_to_capture_site(factors)
-            images.append(self.window_handler.grab_and_cut_window_image(CARD_PORTRAIT_CAPTURE_AREA))
+            images.append(self.window_handler.window_factors_to_image(CARD_PORTRAIT_CAPTURE_AREA))
             mouse.right_click()
             sleep(MOUSE_PAUSE_TIME)
         return images

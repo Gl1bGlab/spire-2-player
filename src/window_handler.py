@@ -7,7 +7,7 @@ from PIL.Image import Image
 
 from constants.project_constants import WH_SCREEN_RATIO, \
 W_FACTOR, H_FACTOR, \
-ENEMY_HEALTH_CAPTURE_AREA, \
+ENEMY_HEALTH_CAPTURE_AREA, LOOT_CAPTURE_AREA, \
 MOUSE_MOVE_TIME, MOUSE_PAUSE_TIME, \
 GENERIC_CARD_PLAY_LOCATION, CARD_CAPTURE_MOUSE_LOCATION, END_TURN_BUTTON_LOCATION, \
 MOUSE_LOOT_LOCATION
@@ -59,7 +59,6 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
 
     def game_screen_grab(self)->None:
         self.absolute_dimensions = win32gui.GetWindowRect(self.window)
-        # self.title_bar_offset()
         self.window_size_normalizer()
         self.curr_image = ImageGrab.grab().crop(self.absolute_dimensions)
     
@@ -112,6 +111,7 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
             dimensions: tuple[float, float, float, float], 
             delay=MOUSE_MOVE_TIME,
         ):
+        self.check_and_grab_game_image()
         l, x, x, b = dimensions
         mouse.move(l, b, duration=delay)
 
@@ -129,15 +129,17 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
         self.mouse_to_factor_pos(CARD_CAPTURE_MOUSE_LOCATION)
         sleep(MOUSE_PAUSE_TIME)
 
-    def grab_and_cut_window_image(self, window_factors)->Image:
-        card_dimensions = self.factors_to_dimensions(window_factors)
+    def window_factors_to_image(self, 
+            factors: tuple[float, float, float, float]
+        )->Image:
+        card_dimensions = self.factors_to_dimensions(factors)
         card_image = ImageGrab.grab().crop(card_dimensions)
         return card_image
 
 
     def mouse_to_enemy(self):
         self.check_and_grab_game_image()
-        image = self.grab_and_cut_window_image(ENEMY_HEALTH_CAPTURE_AREA)
+        image = self.window_factors_to_image(ENEMY_HEALTH_CAPTURE_AREA)
         for color in ENEMY_HEALTH_COLORS:
             xy = find_color_rel_xy(image, color)
             if xy != None:
@@ -164,12 +166,16 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
 
     def is_loot_on_screen(self)->bool:
         self.check_and_grab_game_image()
-        image = self.grab_and_cut_window_image(MOUSE_LOOT_LOCATION)
+        image = self.window_factors_to_image(LOOT_CAPTURE_AREA)
         xy = find_color_rel_xy(image, LOOT_BUTTONS_COLOR)
         return xy is not None
     
+    def is_on_card_select_screen(self)->bool:
+        self.check_and_grab_game_image()
+
+    
     def _show_cut_image(self, factors):
-        self.grab_and_cut_window_image(factors).show()
+        self.window_factors_to_image(factors).show()
 
     def __repr__(self)->str:
         return f"""WindowHandler(

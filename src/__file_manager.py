@@ -6,13 +6,19 @@ from uuid import uuid4
 from PIL.Image import Image
 
 from constants.project_constants import CARD_PORTRAIT_PATH
-from window_handler import WindowHandler
-from stat_handler import StatHandler
+from fight_handler import FightHandler
 
-def scroll_and_gen(window_handler: WindowHandler, stat_handler: StatHandler):
-    portraits = window_handler.scroll_hand(stat_handler)
+def scroll_and_gen(fight_handler: FightHandler):
+    portraits = fight_handler.scroll_hand()
     for portrait in portraits:
         gen_image_file(portrait)
+
+def gen_factor_image(
+        fight_handler: FightHandler, 
+        factors: tuple[float, float, float, float],
+    ):
+    gen_image_file(fight_handler.window_handler.window_factors_to_image(factors))
+
 
 def gen_image_file(img: Image)->str:
     rand_path = normpath(join(CARD_PORTRAIT_PATH, f"..\\temp\\_{str(uuid4())[:8]}.png"))

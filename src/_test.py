@@ -5,7 +5,7 @@ from PIL import ImageChops, Image, ImageGrab, ImageShow
 from PIL.Image import open
 
 from constants.project_constants import CARD_PORTRAIT_PATH, ENEMY_HEALTH_CAPTURE_AREA, \
-LOOT_CAPTURE_AREA, MOUSE_LOOT_LOCATION
+LOOT_CAPTURE_AREA, MOUSE_LOOT_LOCATION, CARD_LOOT_RIBBON_CAPTURE_AREA
 from constants.game_constants import CARDS, CardDataTypes, ENEMY_HEALTH_COLORS
 from window_handler import WindowHandler
 from stat_handler import StatHandler
@@ -13,10 +13,13 @@ from fight_handler import FightHandler
 from card_helpers import card_portrait_to_card
 from __file_manager import *
 
-def main():
+def test():
     stat_manager = StatHandler()
     window_manager = WindowHandler()
     fight_manager = FightHandler(stat_manager, window_manager)
+
+    # fight_manager.window_handler._show_cut_image(CARD_LOOT_RIBBON_CAPTURE_AREA)
+    gen_factor_image(fight_manager, CARD_LOOT_RIBBON_CAPTURE_AREA)
 
     "test specific hand size"
     # fight_manager.set_hand_size(5)
@@ -47,7 +50,6 @@ def main():
     # clear_temp()
     # scroll_and_gen(window_manager, stat_manager)
 
-
 """
 TODO: 
 - fight ending
@@ -68,6 +70,5 @@ TODO:
 (probably a lot of image capture)
 """
 
-
-main()
+test()
 
