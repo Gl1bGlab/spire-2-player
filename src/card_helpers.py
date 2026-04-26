@@ -1,16 +1,14 @@
-from PIL import ImageChops
-from PIL.Image import Image, open
+from PIL.Image import Image
 
-from constants.project_constants import CARD_PORTRAIT_PATH, ACCEPTABLE_IMAGE_DIFF
 from constants.game_constants import CARDS, CardDataTypes
 from card_obj import Card
+from image_utils import does_image_match_path
 
 def card_portrait_to_card(new_card_portrait: Image, card_position: int)->Card:
     for card_name, card_data in CARDS.items():
-        curr_portrait = open(card_data[CardDataTypes.PORTRAIT_PATH])
-        image_diff = count_color(ImageChops.difference(new_card_portrait, curr_portrait))
-
-        if image_diff <= ACCEPTABLE_IMAGE_DIFF:
+        curr_portrait_path = card_data[CardDataTypes.PORTRAIT_PATH]
+        
+        if does_image_match_path(new_card_portrait, curr_portrait_path):
             return build_card(card_position, card_name, card_data)
         
     new_card_portrait.show()
@@ -46,16 +44,3 @@ def replace_card(card: Card, new_card_name: str)->Card:
     hand_position = card.hand_position
     card_data = CARDS[new_card_name]
     return build_card(hand_position, new_card_name, card_data)
-
-# thx to https://www.geeksforgeeks.org/python/find-most-used-colors-in-image-using-python/
-def count_color(img: Image)->float:
-    width, height = img.size
-    total = 0
-    count = 0
-
-    for x in range(0, width):
-        for y in range(0, height):
-            for color in img.getpixel((x, y)):
-                total += color
-            count += 1
-    return total/count

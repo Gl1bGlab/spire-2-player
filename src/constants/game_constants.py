@@ -1,10 +1,12 @@
 from enum import Enum
 from os.path import join
 
-from constants.project_constants import CARD_PORTRAIT_PATH
+from constants.project_constants import CARD_PORTRAIT_PATH, BUTTONS_PATH
 
+# Same of the game's window
 WINDOW_NAME = "Slay the Spire 2"
 
+# Names of important relics
 class DrawRelics(Enum):
     BAG_OF_PREP = "Bag of Preparation"
     CENT_PUZZLE = "Centennial Puzzle"
@@ -23,13 +25,29 @@ class DrawRelics(Enum):
     SNEK_EYE = "Snecko Eye"
     BIG_MUSH = "Big Mushroom"
 
+# Cards and their data types
+# I didn't think to put the names of each card into an Enum for some reason,
+# so I'll just have to deal with the literals unless I fix it down the line.
+FUEL_NAME = "Fuel"
+class CardDataTypes(Enum):
+    PORTRAIT_PATH = "path"
+    ENERGY_COST = "cost"
+    PLAY_TYPE = "play type"
+
+    ENERGY_GAIN = "energy diff"
+    CARDS_ADDED_TO_HAND = "draw diff"
+
+    CREATED_DISCARD_CARDS = "cards added to discard pile"
+
+    TYPE = "type"
+    KEYWORDS = "keywords"
+    SPECIAL = "special"
 class CardTypes(Enum):
     ATTACK = "attack"
     SKILL = "skill"
     POWER = "power"
     STATUS = "status"
     CURSE = "curse"
-
 class SpecialTypes(Enum):
     CONSTANT_DRAW = "constant draw"
     CREATE_CARD_HAND = "create card(s) in hand"
@@ -44,30 +62,13 @@ class SpecialTypes(Enum):
 
     UNIQUE = "unique/track"
     AVOID = "AVOID"
-
-class CardDataTypes(Enum):
-    PORTRAIT_PATH = "path"
-    ENERGY_COST = "cost"
-    PLAY_TYPE = "play type"
-
-    ENERGY_GAIN = "energy diff"
-    CARDS_ADDED_TO_HAND = "draw diff"
-
-    CREATED_DISCARD_CARDS = "cards added to discard pile"
-
-    TYPE = "type"
-    KEYWORDS = "keywords"
-    SPECIAL = "special"
-
 class PlayTypes(Enum):
     TARGET_ENEMY = True
     NO_TARGET = False
-
 class CardKeywords(Enum):
     ETHEREAL = "ethereal"
     EXHAUST = "exhaust"
     UNPLAYABLE = "unplayable"
-
 class UniqueCardNames(Enum):
     CHARGE_BATTERY = "Charge Battery"
     COMPACT = "Compact"
@@ -77,9 +78,6 @@ class UniqueCardNames(Enum):
     REBOOT = "Reboot"
     SIGNAL_BOOST = "Signal Boost"
     SYNTHESIS = "Synthesis"
-
-FUEL_NAME = "Fuel"
-
 CARDS: dict[dict[CardDataTypes]] = {
     "Adaptive Strike": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Adaptive_Strike.png"),
@@ -622,6 +620,20 @@ CARDS: dict[dict[CardDataTypes]] = {
     },
 }
 
+# The many buttons of StS and their many locations on screen
+class ButtonNames(Enum):
+    CHOOSE_CARD_RIBBON = "Choose Card Ribbon"
+class ButtonImageDataTypes(Enum):
+    FACTORS = "factors"
+    PATH = "path"
+BUTTON_IMAGE_DATA: dict[dict[str]] = {
+    ButtonNames.CHOOSE_CARD_RIBBON: {
+        ButtonImageDataTypes.PATH: join(BUTTONS_PATH, "CHOOSE_CARD_RIBBON.png"),
+        ButtonImageDataTypes.FACTORS: (.43, .23, .52, .72)
+        },
+}
+
+# Colors to find in images
 ENEMY_HEALTH_COLORS: list[tuple[int, int, int]] = [(255, 245, 225), (255, 246, 226)]
 LOOT_RIBBON_COLOR: tuple[int, int, int] = (164, 142, 117)
 LOOT_BUTTONS_COLOR: tuple[int, int, int] = (57, 125, 130)

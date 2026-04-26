@@ -5,7 +5,7 @@ from PIL import ImageChops, Image, ImageGrab, ImageShow
 from PIL.Image import open
 
 from constants.project_constants import CARD_PORTRAIT_PATH, ENEMY_HEALTH_CAPTURE_AREA, \
-LOOT_CAPTURE_AREA, MOUSE_LOOT_LOCATION, CARD_LOOT_RIBBON_CAPTURE_AREA
+LOOT_CAPTURE_AREA, MOUSE_LOOT_LOCATION
 from constants.game_constants import CARDS, CardDataTypes, ENEMY_HEALTH_COLORS
 from window_handler import WindowHandler
 from stat_handler import StatHandler
@@ -18,8 +18,9 @@ def test():
     window_manager = WindowHandler()
     fight_manager = FightHandler(stat_manager, window_manager)
 
+    "gen image of specific area"
     # fight_manager.window_handler._show_cut_image(CARD_LOOT_RIBBON_CAPTURE_AREA)
-    gen_factor_image(fight_manager, CARD_LOOT_RIBBON_CAPTURE_AREA)
+    # gen_factor_image(fight_manager, CHOOSE_CARD_RIBBON_CAPTURE_AREA)
 
     "test specific hand size"
     # fight_manager.set_hand_size(5)
@@ -54,6 +55,7 @@ def test():
 TODO: 
 - fight ending
 - handle da loot screen
+    -potions, pick a card
 - reset on death
 
 - card playing logic

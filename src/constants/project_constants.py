@@ -1,8 +1,11 @@
 from os.path import dirname, join, normpath
 from enum import Enum
 
+# Paths of images (and the src dir)
 SRC_PATH = normpath(join(dirname(__file__), ".."))
-CARD_PORTRAIT_PATH = normpath(join(SRC_PATH, "constants\\img_constants\\card_portraits"))
+IMG_CONSTANTS_PATH = normpath(join(SRC_PATH, "constants\\img_constants"))
+CARD_PORTRAIT_PATH = normpath(join(IMG_CONSTANTS_PATH, "card_portraits"))
+BUTTONS_PATH = normpath(join(IMG_CONSTANTS_PATH, "buttons"))
 
 # The images of the card portraits aren't always perfect, so a bit of difference
 # is normal.
@@ -15,11 +18,11 @@ ACCEPTABLE_IMAGE_DIFF = 20
 MOUSE_MOVE_TIME = .5
 MOUSE_PAUSE_TIME = .4
 
+#States the game can be in
 class GameState(Enum):
     UNOPENED = "unopened"
     INIT = "init"
     CHAR_SELECT = "char_select"
-
 class FightState(Enum):
     PLAY_TURN = "play turn"
     END_TURN = "end turn"
@@ -121,9 +124,10 @@ BOTTOM_FACTOR_CONST = .05
 CARD_PORTRAIT_CAPTURE_AREA = (.04, .78, .84, .03)
 ENEMY_HEALTH_CAPTURE_AREA = (.5, .6, .1, .27)
 LOOT_CAPTURE_AREA = (.5, .38, .49, .61)
-CARD_LOOT_RIBBON_CAPTURE_AREA = (.43, .23, .52, .72)
+
 
 CARD_CAPTURE_MOUSE_LOCATION = (.1, 0, 0, .03)
 GENERIC_CARD_PLAY_LOCATION = (.5, 0, 0, .5)
 END_TURN_BUTTON_LOCATION = (.9, 0, 0, .17)
 MOUSE_LOOT_LOCATION = (.5, 0, 0, .61)
+

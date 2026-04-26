@@ -191,9 +191,14 @@ class FightHandler():
     def is_combat_won(self)->bool:
         return self.window_handler.is_loot_on_screen()
 
-    """TODO: avoid card logic"""
+    """TODO: avoid card logic, full potions"""
     def looting(self):
-        return
+        while not self.window_handler.is_on_card_select_screen():
+            mouse.click()
+            # something something check for full potions
+        mouse.click()
+
+
 
     def change_state(self):
         match self._curr_state:

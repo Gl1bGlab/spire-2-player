@@ -5,6 +5,8 @@ from win32 import win32gui
 from PIL import ImageGrab
 from PIL.Image import Image
 
+from image_utils import does_image_match_path
+
 from constants.project_constants import WH_SCREEN_RATIO, \
 W_FACTOR, H_FACTOR, \
 ENEMY_HEALTH_CAPTURE_AREA, LOOT_CAPTURE_AREA, \
@@ -13,7 +15,8 @@ GENERIC_CARD_PLAY_LOCATION, CARD_CAPTURE_MOUSE_LOCATION, END_TURN_BUTTON_LOCATIO
 MOUSE_LOOT_LOCATION
 
 from constants.game_constants import WINDOW_NAME, ENEMY_HEALTH_COLORS, \
-LOOT_BUTTONS_COLOR
+LOOT_BUTTONS_COLOR, \
+BUTTON_IMAGE_DATA, ButtonNames, ButtonImageDataTypes
 
 class WindowHandler():
     def __init__(self):
@@ -86,6 +89,7 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
     def factors_to_dimensions(self, 
             factors: tuple[float, float, float, float]
         )->tuple[float, float, float, float]:
+
         self.check_and_grab_game_image()
         l_factor, t_factor, r_factor, b_factor = factors
         abs_l, abs_t, abs_r, abs_b = self.absolute_dimensions
@@ -98,6 +102,7 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
             xy_window_factor: tuple[float, float, float, float], 
             xy: tuple[int, int],
         )->tuple[float, float, float, float]:
+
         xy_window_dimensions = self.factors_to_dimensions(xy_window_factor)
         abs_x, x, x, abs_y = xy_window_dimensions
 
@@ -111,6 +116,7 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
             dimensions: tuple[float, float, float, float], 
             delay=MOUSE_MOVE_TIME,
         ):
+
         self.check_and_grab_game_image()
         l, x, x, b = dimensions
         mouse.move(l, b, duration=delay)
@@ -119,6 +125,7 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
             factors: tuple[float, float, float, float],
             delay=MOUSE_MOVE_TIME,
         ):
+
         dimensions = self.factors_to_dimensions(factors)
         self.mouse_to_dimension_pos(dimensions)
 
@@ -132,6 +139,8 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
     def window_factors_to_image(self, 
             factors: tuple[float, float, float, float]
         )->Image:
+
+        self.check_and_grab_game_image()
         card_dimensions = self.factors_to_dimensions(factors)
         card_image = ImageGrab.grab().crop(card_dimensions)
         return card_image
@@ -156,7 +165,7 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
     def mouse_to_end_turn(self):
         self.mouse_to_factor_pos(END_TURN_BUTTON_LOCATION)
         
-    def mouse_to_play_position(self, is_targeting_enemy):
+    def mouse_to_play_position(self, is_targeting_enemy: bool):
         if is_targeting_enemy: self.mouse_to_enemy()
         else: self.mouse_to_generic_play_pos()
 
@@ -165,14 +174,32 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
 
 
     def is_loot_on_screen(self)->bool:
-        self.check_and_grab_game_image()
-        image = self.window_factors_to_image(LOOT_CAPTURE_AREA)
-        xy = find_color_rel_xy(image, LOOT_BUTTONS_COLOR)
-        return xy is not None
+        return self.check_and_find_color_factors_rel_xy(LOOT_CAPTURE_AREA, LOOT_BUTTONS_COLOR) is not None
     
     def is_on_card_select_screen(self)->bool:
-        self.check_and_grab_game_image()
+        factors = BUTTON_IMAGE_DATA[ButtonNames.CHOOSE_CARD_RIBBON][ButtonImageDataTypes.FACTORS]
+        path = BUTTON_IMAGE_DATA[ButtonNames.CHOOSE_CARD_RIBBON][ButtonImageDataTypes.PATH]
+        if self.factor_image_match_path(factors, path):
+            self.mouse_to_factor_pos(factors)
+            return True
+        return False
 
+
+    def factor_image_match_path(self, 
+        factors: tuple[float, float, float, float],
+        img_path: str,
+        )->bool:
+
+        image = self.window_factors_to_image(factors)
+        return does_image_match_path(image, img_path)
+
+    def check_and_find_color_factors_rel_xy(self,
+            factors: tuple[float, float, float, float], 
+            color: tuple[int, int, int]
+        )->tuple[int, int] | None:
+
+        image = self.window_factors_to_image(factors)
+        return find_color_rel_xy(image, color)
     
     def _show_cut_image(self, factors):
         self.window_factors_to_image(factors).show()
