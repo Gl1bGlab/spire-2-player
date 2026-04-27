@@ -117,7 +117,12 @@ class FightHandler():
         self.window_handler.mouse_to_dimension_pos(factors, delay=0)
         sleep(MOUSE_PAUSE_TIME)
         mouse.press()
-        self.window_handler.mouse_to_play_position(card.play_type.value)
+        was_mouse_moved = self.window_handler.mouse_to_play_position(card.play_type.value)
+        if self.is_combat_won():
+            self._curr_state = FightState.LOOTING
+            return
+        if not was_mouse_moved:
+            raise Exception("Enemy health bar not found")
         mouse.release()
 
     def play_turn(self):
@@ -125,11 +130,16 @@ class FightHandler():
         self._curr_turn += 1
         self._cards_played_this_turn = 0
 
+        if self.is_combat_won() or self._curr_state == FightState.LOOTING:
+            self._curr_state = FightState.LOOTING
+            self.change_state()
+            return
+
         self.hand_to_cards()
         self.play_card_loop()
 
-        if self._curr_state != FightState.LOOTING:
-            self._curr_state = FightState.END_TURN
+        if self.is_combat_won(): self._curr_state = FightState.LOOTING
+        else: self._curr_state = FightState.END_TURN
 
         self.change_state()
 
@@ -170,6 +180,9 @@ class FightHandler():
             self.add_cards_to_discard(-1)
 
         self.play_card(card)
+        if self._curr_state == FightState.LOOTING:
+            return
+        
         self.add_hand_size(-1)
         self.add_cards_to_discard(1)
 
@@ -184,7 +197,10 @@ class FightHandler():
         mouse.click()
         sleep(6)
 
-        self._curr_state = FightState.PLAY_TURN
+        if self.is_combat_won():
+            self._curr_state = FightState.LOOTING
+        else: self._curr_state = FightState.PLAY_TURN
+
         self.change_state()
 
 
@@ -193,12 +209,15 @@ class FightHandler():
 
     """TODO: avoid card logic, full potions"""
     def looting(self):
+        self.window_handler.mouse_to_loot()
         while not self.window_handler.is_on_card_select_screen():
             mouse.click()
             # something something check for full potions
+        self.window_handler.mouse_to_middle_card_choice()
         mouse.click()
-
-
+        self.window_handler.mouse_to_proceed()
+        mouse.click()
+        self._curr_state = FightState.FIGHT_WON
 
     def change_state(self):
         match self._curr_state:
@@ -209,8 +228,9 @@ class FightHandler():
                 self.end_turn()
                 return
             case FightState.LOOTING:
+                self.looting()
                 return
-            case FightState.FIGHT_FINISHED:
+            case FightState.FIGHT_WON:
                 return
             case FightState.DEAD:
                 return
@@ -281,8 +301,10 @@ class FightHandler():
                 self.track_card(card.name)
             case UniqueCardNames.SYNTHESIS.value:
                 self.track_card(card.name)
+            case UniqueCardNames.MOMENTUM_STRIKE.value:
+                self.track_card(card.name)
             case _:
-                raise Exception("marked non-unique card as unique")
+                raise Exception("marked non-unique card as unique...somehow...")
 
     def select_from_hand(self):
         pass
@@ -304,8 +326,6 @@ class FightHandler():
         if card_name not in self._tracked_cards:
             self._tracked_cards[card_name] = 0
         self._tracked_cards[card_name] += 1
-
-
 
 
     def __repr__(self):

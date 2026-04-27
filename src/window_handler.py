@@ -11,8 +11,7 @@ from constants.project_constants import WH_SCREEN_RATIO, \
 W_FACTOR, H_FACTOR, \
 ENEMY_HEALTH_CAPTURE_AREA, LOOT_CAPTURE_AREA, \
 MOUSE_MOVE_TIME, MOUSE_PAUSE_TIME, \
-GENERIC_CARD_PLAY_LOCATION, CARD_CAPTURE_MOUSE_LOCATION, END_TURN_BUTTON_LOCATION, \
-MOUSE_LOOT_LOCATION
+MOUSE_LOCATIONS, MouLocNames
 
 from constants.game_constants import WINDOW_NAME, ENEMY_HEALTH_COLORS, \
 LOOT_BUTTONS_COLOR, \
@@ -121,7 +120,7 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
         l, x, x, b = dimensions
         mouse.move(l, b, duration=delay)
 
-    def mouse_to_factor_pos(self,
+    def mouse_to_mouse_location(self,
             factors: tuple[float, float, float, float],
             delay=MOUSE_MOVE_TIME,
         ):
@@ -133,7 +132,7 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
         self.mouse_to_dimension_pos(factors)
         mouse.click()
 
-        self.mouse_to_factor_pos(CARD_CAPTURE_MOUSE_LOCATION)
+        self.mouse_to_mouse_location(MOUSE_LOCATIONS[MouLocNames.CARD_CAPTURE])
         sleep(MOUSE_PAUSE_TIME)
 
     def window_factors_to_image(self, 
@@ -146,7 +145,7 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
         return card_image
 
 
-    def mouse_to_enemy(self):
+    def mouse_to_enemy(self)->bool:
         self.check_and_grab_game_image()
         image = self.window_factors_to_image(ENEMY_HEALTH_CAPTURE_AREA)
         for color in ENEMY_HEALTH_COLORS:
@@ -154,33 +153,44 @@ If the game is opened, make sure the name of the window is 'Slay the Spire 2'"""
             if xy != None:
                 break
         if xy == None:
-            raise Exception("Enemy health bar not found")
-
+            return False
+            
         xy_factor = self.find_xy_dimensions(ENEMY_HEALTH_CAPTURE_AREA, xy)
         self.mouse_to_dimension_pos(xy_factor)
+        return True
 
-    def mouse_to_generic_play_pos(self):
-        self.mouse_to_factor_pos(GENERIC_CARD_PLAY_LOCATION)
+    def mouse_to_generic_play_pos(self)->bool:
+        self.mouse_to_mouse_location(MOUSE_LOCATIONS[MouLocNames.GENERIC_CARD_PLAY])
+        return True
 
     def mouse_to_end_turn(self):
-        self.mouse_to_factor_pos(END_TURN_BUTTON_LOCATION)
+        self.mouse_to_mouse_location(MOUSE_LOCATIONS[MouLocNames.END_TURN_BUTTON])
         
-    def mouse_to_play_position(self, is_targeting_enemy: bool):
-        if is_targeting_enemy: self.mouse_to_enemy()
-        else: self.mouse_to_generic_play_pos()
+    def mouse_to_play_position(self, is_targeting_enemy: bool)->bool:
+        if is_targeting_enemy: return self.mouse_to_enemy()
+        else: return self.mouse_to_generic_play_pos()
 
     def mouse_to_loot(self):
-        self.mouse_to_factor_pos(MOUSE_LOOT_LOCATION)
+        self.mouse_to_mouse_location(MOUSE_LOCATIONS[MouLocNames.LOOT])
+
+    def mouse_to_proceed(self):
+        self.mouse_to_mouse_location(MOUSE_LOCATIONS[MouLocNames.PROCEED_BUTTON])
+
+    def mouse_to_middle_card_choice(self):
+        self.mouse_to_mouse_location(MOUSE_LOCATIONS[MouLocNames.MIDDLE_CARD_CHOICE])
 
 
     def is_loot_on_screen(self)->bool:
-        return self.check_and_find_color_factors_rel_xy(LOOT_CAPTURE_AREA, LOOT_BUTTONS_COLOR) is not None
+        for color in LOOT_BUTTONS_COLOR:
+            if self.check_and_find_color_factors_rel_xy(LOOT_CAPTURE_AREA, color):
+                return True
+        return False
     
     def is_on_card_select_screen(self)->bool:
         factors = BUTTON_IMAGE_DATA[ButtonNames.CHOOSE_CARD_RIBBON][ButtonImageDataTypes.FACTORS]
         path = BUTTON_IMAGE_DATA[ButtonNames.CHOOSE_CARD_RIBBON][ButtonImageDataTypes.PATH]
         if self.factor_image_match_path(factors, path):
-            self.mouse_to_factor_pos(factors)
+            self.mouse_to_mouse_location(factors)
             return True
         return False
 

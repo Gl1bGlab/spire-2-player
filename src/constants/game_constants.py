@@ -27,7 +27,7 @@ class DrawRelics(Enum):
 
 # Cards and their data types
 # I didn't think to put the names of each card into an Enum for some reason,
-# so I'll just have to deal with the literals unless I fix it down the line.
+# so I'll just have to deal with the literals unless I change it down the line.
 FUEL_NAME = "Fuel"
 class CardDataTypes(Enum):
     PORTRAIT_PATH = "path"
@@ -78,6 +78,7 @@ class UniqueCardNames(Enum):
     REBOOT = "Reboot"
     SIGNAL_BOOST = "Signal Boost"
     SYNTHESIS = "Synthesis"
+    MOMENTUM_STRIKE = "Momentum Strike"
 CARDS: dict[dict[CardDataTypes]] = {
     "Adaptive Strike": {
         CardDataTypes.PORTRAIT_PATH: join(CARD_PORTRAIT_PATH, "_Adaptive_Strike.png"),
@@ -636,4 +637,4 @@ BUTTON_IMAGE_DATA: dict[dict[str]] = {
 # Colors to find in images
 ENEMY_HEALTH_COLORS: list[tuple[int, int, int]] = [(255, 245, 225), (255, 246, 226)]
 LOOT_RIBBON_COLOR: tuple[int, int, int] = (164, 142, 117)
-LOOT_BUTTONS_COLOR: tuple[int, int, int] = (57, 125, 130)
+LOOT_BUTTONS_COLOR: list[tuple[int, int, int]] = [(57, 125, 130), (50, 111, 116)]

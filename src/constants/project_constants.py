@@ -28,7 +28,7 @@ class FightState(Enum):
     END_TURN = "end turn"
     ENEMY_TURN = "enemy turn"
     LOOTING = "looting"
-    FIGHT_FINISHED = "fight finished"
+    FIGHT_WON = "fight finished"
     DEAD = "died"
 
 # The game runs at a constant 16/9 width/height ratio. I WAS going to try
@@ -126,8 +126,18 @@ ENEMY_HEALTH_CAPTURE_AREA = (.5, .6, .1, .27)
 LOOT_CAPTURE_AREA = (.5, .38, .49, .61)
 
 
-CARD_CAPTURE_MOUSE_LOCATION = (.1, 0, 0, .03)
-GENERIC_CARD_PLAY_LOCATION = (.5, 0, 0, .5)
-END_TURN_BUTTON_LOCATION = (.9, 0, 0, .17)
-MOUSE_LOOT_LOCATION = (.5, 0, 0, .61)
-
+class MouLocNames(Enum):
+    CARD_CAPTURE = "card capture"
+    GENERIC_CARD_PLAY = "middle card play"
+    END_TURN_BUTTON = "end turn button"
+    LOOT = "loot"
+    PROCEED_BUTTON = "proceed button"
+    MIDDLE_CARD_CHOICE = "middle card choice"
+MOUSE_LOCATIONS: dict[tuple[float, float, float, float]] = {
+    MouLocNames.CARD_CAPTURE: (.1, 0, 0, .03),
+    MouLocNames.GENERIC_CARD_PLAY: (.5, 0, 0, .5),
+    MouLocNames.END_TURN_BUTTON: (.9, 0, 0, .17),
+    MouLocNames.LOOT: (.5, 0, 0, .61),
+    MouLocNames.PROCEED_BUTTON: (.9, 0, 0, .23),
+    MouLocNames.MIDDLE_CARD_CHOICE: (.5, 0, 0, .5),
+}
